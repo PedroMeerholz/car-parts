@@ -3,6 +3,7 @@ package io.github.pedromeerholz.Car.Parts.Stock.api.service;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.User;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.NewUserDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,6 @@ public class UserService {
         try {
             if (this.userRepository.findByEmail(email).get() != null) {
                 User currentUser = this.userRepository.findByEmail(email).get();
-                System.out.println("Aqui chega");
                 User user = new User();
                 user.setId(currentUser.getId());
                 user.setName(updateUserDto.getName());
@@ -44,6 +44,24 @@ public class UserService {
             return false;
         } catch (Exception exception) {
             exception.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto) {
+        try {
+            if (this.userRepository.findByEmail(email).get() != null) {
+                User currentUser = this.userRepository.findByEmail(email).get();
+                User updatedUser = new User();
+                updatedUser.setId(currentUser.getId());
+                updatedUser.setName(currentUser.getName());
+                updatedUser.setEmail(currentUser.getEmail());
+                updatedUser.setPassword(updateUserPasswordDto.getPassword());
+                this.userRepository.save(updatedUser);
+                return true;
+            }
+            return false;
+        } catch (Exception exception) {
             return false;
         }
     }
