@@ -23,7 +23,7 @@ public class UserService {
         try {
             resultMessage = this.userValidator.validateUserData(newUserDto.getName(), newUserDto.getEmail(),
                     newUserDto.getPassword());
-            if (resultMessage.equals("Usuário cadastrado com sucesso")) {
+            if (resultMessage.equals("Usuário cadastrado com sucesso!")) {
                 User user = new User();
                 user.setName(newUserDto.getName());
                 user.setEmail(newUserDto.getEmail());
