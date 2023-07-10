@@ -4,6 +4,7 @@ import io.github.pedromeerholz.Car.Parts.Stock.api.model.User;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.NewUserDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UserLoginDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,22 @@ public class UserService {
             }
             return false;
         } catch (Exception exception) {
+            return false;
+        }
+    }
+
+    public boolean login(String email, String password) {
+        try {
+            if(this.userRepository.findByEmail(email).get() != null) {
+                User credentials = this.userRepository.findByEmail(email).get();
+                if (password.equals(credentials.getPassword())) {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return false;
         }
     }

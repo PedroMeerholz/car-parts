@@ -41,4 +41,13 @@ public class UserController {
         }
         return "Não foi possível atualizar a senha do usuário. Informe uma senha válida e tente novamente.";
     }
+
+    @GetMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password) {
+        boolean isUserAuthorized = this.userService.login(email, password);
+        if (isUserAuthorized) {
+            return "Usuário apto a fazer login";
+        }
+        return "Verifique as informações e tente novamente";
+    }
 }
