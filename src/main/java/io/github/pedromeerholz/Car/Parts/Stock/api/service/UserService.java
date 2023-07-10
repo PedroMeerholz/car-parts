@@ -4,29 +4,36 @@ import io.github.pedromeerholz.Car.Parts.Stock.api.model.User;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.NewUserDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UserLoginDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.UserRepository;
+import io.github.pedromeerholz.Car.Parts.Stock.userValidations.UserValidator;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private UserValidator userValidator;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.userValidator = new UserValidator();
     }
 
-    public boolean createUser(NewUserDto newUserDto) {
+    public String createUser(NewUserDto newUserDto) {
+        String resultMessage = "";
         try {
-            User user = new User();
-            user.setName(newUserDto.getUserName());
-            user.setEmail(newUserDto.getEmail());
-            user.setPassword(newUserDto.getPassword());
-            this.userRepository.save(user);
-            return true;
+            resultMessage = this.userValidator.validateUserData(newUserDto.getName(), newUserDto.getEmail(),
+                    newUserDto.getPassword());
+            if (resultMessage.equals("Usuário cadastrado com sucesso")) {
+                User user = new User();
+                user.setName(newUserDto.getName());
+                user.setEmail(newUserDto.getEmail());
+                user.setPassword(newUserDto.getPassword());
+                this.userRepository.save(user);
+            }
+            return resultMessage;
         } catch (Exception exception) {
             exception.printStackTrace();
-            return false;
+            return resultMessage;
         }
     }
 

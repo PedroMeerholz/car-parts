@@ -17,11 +17,7 @@ public class UserController {
 
     @PostMapping("/create")
     public String createUser(@RequestBody NewUserDto newUserDto) {
-        boolean isUserCreated = this.userService.createUser(newUserDto);
-        if (isUserCreated) {
-            return "Usuário criado com suscesso";
-        }
-        return "Não foi possível cadastrar o usuário. Verifique as informações e tente novamente.";
+        return this.userService.createUser(newUserDto);
     }
 
     @PatchMapping("/update")
