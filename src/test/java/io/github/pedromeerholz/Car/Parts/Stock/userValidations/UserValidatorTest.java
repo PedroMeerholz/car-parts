@@ -32,16 +32,16 @@ class UserValidatorTest {
         String name = "Pedro";
         String email = "pedro@gmail.com";
         String password = "123456789";
-        String resultMessage = this.userValidator.validateUserDataToCreate(name, email, password);
-        Assertions.assertEquals("Usuário cadastrado com sucesso!", resultMessage);
+        boolean result = this.userValidator.validateUserDataToCreate(name, email, password);
+        Assertions.assertEquals(true, result);
     }
 
     @Test
     void validadeUserDataToUpdate() {
         String name = "Pedro";
         String email = "pedro@gmail.com";
-        String resultMessage = this.userValidator.validateUserDataToUpdate(name, email);
-        Assertions.assertEquals("Usuário pode ser atualizado", resultMessage);
+        boolean result = this.userValidator.validateUserDataToUpdate(name, email);
+        Assertions.assertEquals(true, result);
     }
 
     @Test
