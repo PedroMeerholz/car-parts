@@ -73,7 +73,6 @@ public class UserService {
                     User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(),
                             updateUserPasswordDto.getPassword());
                     this.userRepository.save(updatedUser);
-                    System.out.println("Alterei");
                     this.resultMessage = "Senha alterada com sucesso";
                 }
                 return this.resultMessage;
