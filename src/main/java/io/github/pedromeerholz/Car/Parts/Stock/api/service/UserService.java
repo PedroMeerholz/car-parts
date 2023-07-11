@@ -7,6 +7,7 @@ import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordD
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.UserRepository;
 import io.github.pedromeerholz.Car.Parts.Stock.userValidations.RegisteredEmailValidator;
 import io.github.pedromeerholz.Car.Parts.Stock.userValidations.UserValidator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,10 +15,12 @@ public class UserService {
     private UserRepository userRepository;
     private UserValidator userValidator;
     private RegisteredEmailValidator registeredEmailValidator;
+    private BCryptPasswordEncoder encoder;
     private String resultMessage;
 
-    public UserService(UserRepository userRepository, RegisteredEmailValidator registeredEmailValidator) {
+    public UserService(UserRepository userRepository, RegisteredEmailValidator registeredEmailValidator, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
+        this.encoder = encoder;
         this.userValidator = new UserValidator();
         this.registeredEmailValidator = registeredEmailValidator;
     }
@@ -30,7 +33,8 @@ public class UserService {
                 User user = new User();
                 user.setName(newUserDto.getName());
                 user.setEmail(newUserDto.getEmail());
-                user.setPassword(newUserDto.getPassword());
+                String encodedPassword = encoder.encode(newUserDto.getPassword());
+                user.setPassword(encodedPassword);
                 this.userRepository.save(user);
             }
         } catch (Exception exception) {
@@ -70,8 +74,8 @@ public class UserService {
                 User currentUser = this.userRepository.findByEmail(email).get();
                 this.resultMessage = this.userValidator.validatePasswordToUpdate(updateUserPasswordDto.getPassword());
                 if (this.resultMessage.equals("Senha pode ser alterada")) {
-                    User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(),
-                            updateUserPasswordDto.getPassword());
+                    String newEncodedPassword = this.encoder.encode(updateUserPasswordDto.getPassword());
+                    User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(), newEncodedPassword);
                     this.userRepository.save(updatedUser);
                     this.resultMessage = "Senha alterada com sucesso";
                 }
@@ -97,7 +101,8 @@ public class UserService {
         try {
             if(this.userRepository.findByEmail(email).get() != null) {
                 User credentials = this.userRepository.findByEmail(email).get();
-                if (password.equals(credentials.getPassword())) {
+                boolean isPasswordMatches = this.encoder.matches(password, credentials.getPassword());
+                if (isPasswordMatches) {
                     return "Usuário apto a fazer login";
                 }
             }
