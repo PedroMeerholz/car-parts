@@ -7,6 +7,9 @@ import io.github.pedromeerholz.Car.Parts.Stock.validations.carPartsValidations.C
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CarPartCategoryService {
     private final CarPartCategoryRepository carPartCategoryRepository;
@@ -32,5 +35,9 @@ public class CarPartCategoryService {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return HttpStatus.NOT_ACCEPTABLE;
+    }
+
+    public List<CarPartCategory> listAll() {
+        return this.carPartCategoryRepository.findAll();
     }
 }
