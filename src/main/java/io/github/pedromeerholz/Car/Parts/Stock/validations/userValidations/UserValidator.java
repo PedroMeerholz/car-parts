@@ -1,5 +1,6 @@
 package io.github.pedromeerholz.Car.Parts.Stock.validations.userValidations;
 
+import io.github.pedromeerholz.Car.Parts.Stock.validations.EmptyValueValidator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.regex.Matcher;
@@ -10,16 +11,10 @@ public class UserValidator {
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
-
-    public boolean emptyValueValidation(String value) {
-        if (value == null || value.equals("")) {
-            return false;
-        }
-        return true;
-    }
+    private final EmptyValueValidator emptyValueValidator = new EmptyValueValidator();
 
     public boolean validateEmail(String email) {
-        boolean isNotEmptyEmail = this.emptyValueValidation(email);
+        boolean isNotEmptyEmail = this.emptyValueValidator.emptyValueValidation(email);
         boolean isValidEmail = this.isValidEmail(email);
         if (!isNotEmptyEmail || !isValidEmail) {
             return false;
@@ -34,7 +29,7 @@ public class UserValidator {
     }
 
     public boolean validatePasswordPattern(String password) {
-        boolean isNotEmptyPassword = this.emptyValueValidation(password);
+        boolean isNotEmptyPassword = this.emptyValueValidator.emptyValueValidation(password);
         boolean isValidPassword = this.validatePasswordLength(password);
         if (!isNotEmptyPassword || !isValidPassword) {
             return false;
@@ -67,14 +62,15 @@ public class UserValidator {
     }
 
     public boolean validateUserDataToCreate(String name, String email, String password) {
-        if (!this.emptyValueValidation(name) || !this.validateEmail(email) || !this.validatePasswordPattern(password)) {
+        if (!this.emptyValueValidator.emptyValueValidation(name) || !this.validateEmail(email) ||
+                !this.validatePasswordPattern(password)) {
             return false;
         }
         return true;
     }
 
     public boolean validateUserDataToUpdate(String name, String email) {
-        if (!this.emptyValueValidation(name) || !this.validateEmail(email)) {
+        if (!this.emptyValueValidator.emptyValueValidation(name) || !this.validateEmail(email)) {
             return false;
         }
         return true;
