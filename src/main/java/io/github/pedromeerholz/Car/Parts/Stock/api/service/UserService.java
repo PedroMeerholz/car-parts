@@ -7,6 +7,7 @@ import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordD
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.UserRepository;
 import io.github.pedromeerholz.Car.Parts.Stock.userValidations.RegisteredEmailValidator;
 import io.github.pedromeerholz.Car.Parts.Stock.userValidations.UserValidator;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,28 +65,26 @@ public class UserService {
         return this.resultMessage;
     }
 
-    public String updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto) {
+    public HttpStatus updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto) {
         try {
             boolean isRegisteredEmail = this.registeredEmailValidator.isRegisteredEmail(email);
-            if (isRegisteredEmail == false) {
-                return "Usuário não cadastrado";
+            if (!isRegisteredEmail) {
+                return HttpStatus.UNAUTHORIZED;
             }
             if (this.userRepository.findByEmail(email).get() != null) {
                 User currentUser = this.userRepository.findByEmail(email).get();
-                this.resultMessage = this.userValidator.validatePasswordToUpdate(updateUserPasswordDto.getPassword());
-                if (this.resultMessage.equals("Senha pode ser alterada")) {
+                boolean isValidPassword = this.userValidator.validatePasswordToUpdate(updateUserPasswordDto.getPassword());
+                if (isValidPassword) {
                     String newEncodedPassword = this.encoder.encode(updateUserPasswordDto.getPassword());
                     User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(), newEncodedPassword);
                     this.userRepository.save(updatedUser);
-                    this.resultMessage = "Senha alterada com sucesso";
+                    return HttpStatus.ACCEPTED;
                 }
-                return this.resultMessage;
             }
-            return this.resultMessage;
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        return this.resultMessage;
+        return HttpStatus.UNAUTHORIZED;
     }
 
     private User createUpdatedUser(Long id, String name, String email, String password) {
@@ -97,18 +96,17 @@ public class UserService {
         return updatedUser;
     }
 
-    public String login(String email, String password) {
+    public HttpStatus login(String email, String password) {
         try {
             if(this.userRepository.findByEmail(email).get() != null) {
                 User credentials = this.userRepository.findByEmail(email).get();
-                boolean isPasswordMatches = this.encoder.matches(password, credentials.getPassword());
-                if (isPasswordMatches) {
-                    return "Usuário apto a fazer login";
+                if (!this.userValidator.validateEncodedPassword(this.encoder, password, credentials.getPassword())) {
+                    return HttpStatus.UNAUTHORIZED;
                 }
             }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        return "Verifique as informações e tente novamente";
+        return HttpStatus.ACCEPTED;
     }
 }

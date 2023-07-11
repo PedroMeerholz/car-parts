@@ -1,5 +1,7 @@
 package io.github.pedromeerholz.Car.Parts.Stock.userValidations;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,17 +33,33 @@ public class UserValidator {
         return result;
     }
 
-    public boolean validatePassword(String password) {
+    public boolean validatePasswordPattern(String password) {
         boolean isNotEmptyPassword = this.emptyValueValidation(password);
-        boolean isValidPassword = this.isValidPassword(password);
+        boolean isValidPassword = this.validatePasswordLength(password);
         if (!isNotEmptyPassword || !isValidPassword) {
             return false;
         }
         return true;
     }
 
-    private boolean isValidPassword(String password) {
+    private boolean validatePasswordLength(String password) {
         if (password.length() < 8) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validatePasswordToUpdate(String password) {
+        boolean validPassword = this.validatePasswordPattern(password);
+        if (!validPassword) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validateEncodedPassword(BCryptPasswordEncoder encoder, String receivedPassword, String encodedPassword) {
+        boolean isPasswordMatches = encoder.matches(receivedPassword, encodedPassword);
+        if (!isPasswordMatches) {
             return false;
         }
         return true;
@@ -54,7 +72,7 @@ public class UserValidator {
         if (!this.validateEmail(email)) {
             return "Preencha um e-mail válido.";
         }
-        if (!this.validatePassword(password)) {
+        if (!this.validatePasswordPattern(password)) {
             return "Preencha uma senha válida. A senha deve possuir no mínimo oito caracteres.";
         }
         return "Usuário cadastrado com sucesso!";
@@ -68,13 +86,5 @@ public class UserValidator {
             return "Preencha um e-mail válido.";
         }
         return "Usuário pode ser atualizado";
-    }
-
-    public String validatePasswordToUpdate(String password) {
-        boolean validPassword = this.validatePassword(password);
-        if (!validPassword) {
-            return "A nova senha não é válida. A senha deve possuir no mínimo oito caracteres.";
-        }
-        return "Senha pode ser alterada";
     }
 }

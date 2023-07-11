@@ -4,6 +4,7 @@ import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.NewUserDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,12 +27,12 @@ public class UserController {
     }
 
     @PatchMapping("/updatePassword")
-    public String updateUserPassword(@RequestBody UpdateUserPasswordDto updateUserPasswordDto, @RequestParam String email) {
+    public HttpStatus updateUserPassword(@RequestBody UpdateUserPasswordDto updateUserPasswordDto, @RequestParam String email) {
         return this.userService.updateUserPassword(email, updateUserPasswordDto);
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password) {
+    public HttpStatus login(@RequestParam String email, @RequestParam String password) {
         return this.userService.login(email, password);
     }
 }
