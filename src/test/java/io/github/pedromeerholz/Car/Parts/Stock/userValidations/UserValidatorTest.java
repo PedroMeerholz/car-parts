@@ -8,13 +8,6 @@ class UserValidatorTest {
     private UserValidator userValidator = new UserValidator();
 
     @Test
-    void emptyValueValidation() {
-        String value = "Pedro";
-        boolean result = this.userValidator.emptyValueValidation(value);
-        Assertions.assertEquals(true, result);
-    }
-
-    @Test
     void validateEmail() {
         String email = "pedro@gmail.br";
         boolean result = this.userValidator.validateEmail(email);
