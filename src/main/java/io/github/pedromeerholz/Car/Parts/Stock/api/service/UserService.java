@@ -94,19 +94,17 @@ public class UserService {
         return updatedUser;
     }
 
-    public boolean login(String email, String password) {
+    public String login(String email, String password) {
         try {
             if(this.userRepository.findByEmail(email).get() != null) {
                 User credentials = this.userRepository.findByEmail(email).get();
                 if (password.equals(credentials.getPassword())) {
-                    return true;
+                    return "Usuário apto a fazer login";
                 }
-                return false;
             }
-            return false;
         } catch (Exception exception) {
             exception.printStackTrace();
-            return false;
         }
+        return "Verifique as informações e tente novamente";
     }
 }

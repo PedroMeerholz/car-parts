@@ -32,10 +32,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password) {
-        boolean isUserAuthorized = this.userService.login(email, password);
-        if (isUserAuthorized) {
-            return "Usuário apto a fazer login";
-        }
-        return "Verifique as informações e tente novamente";
+        return this.userService.login(email, password);
     }
 }
