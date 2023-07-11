@@ -60,6 +60,31 @@ public class UserService {
         return this.resultMessage;
     }
 
+    public String updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto) {
+        try {
+            boolean isRegisteredEmail = this.registeredEmailValidator.isRegisteredEmail(email);
+            if (isRegisteredEmail == false) {
+                return "Usuário não cadastrado";
+            }
+            if (this.userRepository.findByEmail(email).get() != null) {
+                User currentUser = this.userRepository.findByEmail(email).get();
+                this.resultMessage = this.userValidator.validadePasswordToUpdate(updateUserPasswordDto.getPassword());
+                if (this.resultMessage.equals("Senha pode ser alterada")) {
+                    User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(),
+                            updateUserPasswordDto.getPassword());
+                    this.userRepository.save(updatedUser);
+                    System.out.println("Alterei");
+                    this.resultMessage = "Senha alterada com sucesso";
+                }
+                return this.resultMessage;
+            }
+            return this.resultMessage;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return this.resultMessage;
+    }
+
     private User createUpdatedUser(Long id, String name, String email, String password) {
         User updatedUser = new User();
         updatedUser.setId(id);
@@ -67,24 +92,6 @@ public class UserService {
         updatedUser.setEmail(email);
         updatedUser.setPassword(password);
         return updatedUser;
-    }
-
-    public boolean updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto) {
-        try {
-            if (this.userRepository.findByEmail(email).get() != null) {
-                User currentUser = this.userRepository.findByEmail(email).get();
-                User updatedUser = new User();
-                updatedUser.setId(currentUser.getId());
-                updatedUser.setName(currentUser.getName());
-                updatedUser.setEmail(currentUser.getEmail());
-                updatedUser.setPassword(updateUserPasswordDto.getPassword());
-                this.userRepository.save(updatedUser);
-                return true;
-            }
-            return false;
-        } catch (Exception exception) {
-            return false;
-        }
     }
 
     public boolean login(String email, String password) {

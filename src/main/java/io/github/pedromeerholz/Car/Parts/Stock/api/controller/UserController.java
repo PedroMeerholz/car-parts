@@ -27,11 +27,7 @@ public class UserController {
 
     @PatchMapping("/updatePassword")
     public String updateUserPassword(@RequestBody UpdateUserPasswordDto updateUserPasswordDto, @RequestParam String email) {
-        boolean isUserPasswordUpdated = this.userService.updateUserPassword(email, updateUserPasswordDto);
-        if (isUserPasswordUpdated) {
-            return "A senha do usuário foi atualizada";
-        }
-        return "Não foi possível atualizar a senha do usuário. Informe uma senha válida e tente novamente.";
+        return this.userService.updateUserPassword(email, updateUserPasswordDto);
     }
 
     @GetMapping("/login")
