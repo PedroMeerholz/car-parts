@@ -33,14 +33,14 @@ public class UserValidator {
 
     public boolean validatePassword(String password) {
         boolean isNotEmptyPassword = this.emptyValueValidation(password);
-        boolean isValidPassword = this.idValidPassword(password);
+        boolean isValidPassword = this.isValidPassword(password);
         if (!isNotEmptyPassword || !isValidPassword) {
             return false;
         }
         return true;
     }
 
-    private boolean idValidPassword(String password) {
+    private boolean isValidPassword(String password) {
         if (password.length() < 8) {
             return false;
         }
