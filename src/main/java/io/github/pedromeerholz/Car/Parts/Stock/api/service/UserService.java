@@ -49,8 +49,8 @@ public class UserService {
                     updateUserDto.getEmail());
             if (this.resultMessage.equals("Usuário pode ser atualizado")) {
                 User currentUser = this.userRepository.findByEmail(email).get();
-                User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(),
-                        currentUser.getEmail(), currentUser.getPassword());
+                User updatedUser = this.createUpdatedUser(currentUser.getId(), updateUserDto.getName(),
+                        updateUserDto.getEmail(), currentUser.getPassword());
                 this.userRepository.save(updatedUser);
                 this.resultMessage = "Usuário atualizado com sucesso!";
             }
