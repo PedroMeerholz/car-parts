@@ -71,9 +71,8 @@ public class UserValidator {
     }
 
     public String validadePasswordToUpdate(String password) {
-        boolean emptyPassword = this.emptyValueValidation(password);
         boolean validPassword = this.validatePassword(password);
-        if (!emptyPassword || !validPassword) {
+        if (!validPassword) {
             return "A nova senha não é válida. A senha deve possuir no mínimo oito caracteres.";
         }
         return "Senha pode ser alterada";
