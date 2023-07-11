@@ -78,13 +78,10 @@ public class UserValidator {
         return "Usuário cadastrado com sucesso!";
     }
 
-    public String validateUserDataToUpdate(String name, String email) {
-        if (!this.emptyValueValidation(name)) {
-            return "Favor informar seu nome corretamente.";
+    public boolean validateUserDataToUpdate(String name, String email) {
+        if (!this.emptyValueValidation(name) || !this.validateEmail(email)) {
+            return false;
         }
-        if (!this.validateEmail(email)) {
-            return "Preencha um e-mail válido.";
-        }
-        return "Usuário pode ser atualizado";
+        return true;
     }
 }

@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PatchMapping("/update")
-    public String updateUser(@RequestBody UpdateUserDto updateUserDto, @RequestParam String email) {
+    public HttpStatus updateUser(@RequestBody UpdateUserDto updateUserDto, @RequestParam String email) {
         return this.userService.updateUser(email, updateUserDto);
     }
 

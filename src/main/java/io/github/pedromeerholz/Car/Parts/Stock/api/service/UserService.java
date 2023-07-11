@@ -44,25 +44,25 @@ public class UserService {
         return this.resultMessage;
     }
 
-    public String updateUser(String email, UpdateUserDto updateUserDto) {
+    public HttpStatus updateUser(String email, UpdateUserDto updateUserDto) {
         try {
             boolean isRegisteredEmail = this.registeredEmailValidator.isRegisteredEmail(email);
             if (isRegisteredEmail == false) {
-                return "O e-mail informado não existe.";
+                return HttpStatus.UNAUTHORIZED;
             }
-            this.resultMessage = this.userValidator.validateUserDataToUpdate(updateUserDto.getName(),
+            boolean isValidUserData = this.userValidator.validateUserDataToUpdate(updateUserDto.getName(),
                     updateUserDto.getEmail());
-            if (this.resultMessage.equals("Usuário pode ser atualizado")) {
+            if (isValidUserData) {
                 User currentUser = this.userRepository.findByEmail(email).get();
                 User updatedUser = this.createUpdatedUser(currentUser.getId(), updateUserDto.getName(),
                         updateUserDto.getEmail(), currentUser.getPassword());
                 this.userRepository.save(updatedUser);
-                this.resultMessage = "Usuário atualizado com sucesso!";
+                return HttpStatus.ACCEPTED;
             }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        return this.resultMessage;
+        return HttpStatus.UNAUTHORIZED;
     }
 
     public HttpStatus updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto) {
