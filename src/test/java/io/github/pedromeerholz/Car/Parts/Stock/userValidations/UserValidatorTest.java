@@ -41,7 +41,7 @@ class UserValidatorTest {
         String name = "Pedro";
         String email = "pedro@gmail.com";
         String resultMessage = this.userValidator.validateUserDataToUpdate(name, email);
-        Assertions.assertEquals("Usuário atualizado com sucesso!", resultMessage);
+        Assertions.assertEquals("Usuário pode ser atualizado", resultMessage);
     }
 
     @Test
