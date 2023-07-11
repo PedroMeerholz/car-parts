@@ -70,7 +70,7 @@ public class UserValidator {
         return "Usuário pode ser atualizado";
     }
 
-    public String validadePasswordToUpdate(String password) {
+    public String validatePasswordToUpdate(String password) {
         boolean validPassword = this.validatePassword(password);
         if (!validPassword) {
             return "A nova senha não é válida. A senha deve possuir no mínimo oito caracteres.";

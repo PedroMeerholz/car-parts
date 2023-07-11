@@ -68,7 +68,7 @@ public class UserService {
             }
             if (this.userRepository.findByEmail(email).get() != null) {
                 User currentUser = this.userRepository.findByEmail(email).get();
-                this.resultMessage = this.userValidator.validadePasswordToUpdate(updateUserPasswordDto.getPassword());
+                this.resultMessage = this.userValidator.validatePasswordToUpdate(updateUserPasswordDto.getPassword());
                 if (this.resultMessage.equals("Senha pode ser alterada")) {
                     User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(),
                             updateUserPasswordDto.getPassword());

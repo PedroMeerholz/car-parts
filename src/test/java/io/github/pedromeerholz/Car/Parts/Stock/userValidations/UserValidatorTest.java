@@ -43,4 +43,11 @@ class UserValidatorTest {
         String resultMessage = this.userValidator.validateUserDataToUpdate(name, email);
         Assertions.assertEquals("Usuário atualizado com sucesso!", resultMessage);
     }
+
+    @Test
+    void validatePasswordToUpdate() {
+        String password = "12345678";
+        String resultMessage = this.userValidator.validatePasswordToUpdate(password);
+        Assertions.assertEquals("Senha pode ser alterada", resultMessage);
+    }
 }
