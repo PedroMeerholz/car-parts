@@ -1,12 +1,12 @@
 package io.github.pedromeerholz.Car.Parts.Stock.api.service;
 
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.User;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.NewUserDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.User;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.dto.NewUserDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.dto.UpdateUserDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.dto.UpdateUserPasswordDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.UserRepository;
-import io.github.pedromeerholz.Car.Parts.Stock.userValidations.RegisteredEmailValidator;
-import io.github.pedromeerholz.Car.Parts.Stock.userValidations.UserValidator;
+import io.github.pedromeerholz.Car.Parts.Stock.validations.userValidations.RegisteredEmailValidator;
+import io.github.pedromeerholz.Car.Parts.Stock.validations.userValidations.UserValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

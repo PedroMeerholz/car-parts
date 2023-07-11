@@ -1,8 +1,8 @@
 package io.github.pedromeerholz.Car.Parts.Stock.api.controller;
 
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.NewUserDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.dto.UpdateUserPasswordDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.dto.NewUserDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.dto.UpdateUserDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.dto.UpdateUserPasswordDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

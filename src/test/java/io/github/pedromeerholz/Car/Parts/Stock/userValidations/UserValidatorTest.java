@@ -1,5 +1,6 @@
 package io.github.pedromeerholz.Car.Parts.Stock.userValidations;
 
+import io.github.pedromeerholz.Car.Parts.Stock.validations.userValidations.UserValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

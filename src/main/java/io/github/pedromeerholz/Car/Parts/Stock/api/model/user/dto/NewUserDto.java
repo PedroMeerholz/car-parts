@@ -1,8 +1,13 @@
-package io.github.pedromeerholz.Car.Parts.Stock.api.model.dto;
+package io.github.pedromeerholz.Car.Parts.Stock.api.model.user.dto;
 
-public class UserLoginDto {
+public class NewUserDto {
+    private String name;
     private String email;
     private String password;
+
+    public String getName() {
+        return name;
+    }
 
     public String getEmail() {
         return email;

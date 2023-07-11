@@ -1,4 +1,4 @@
-package io.github.pedromeerholz.Car.Parts.Stock.userValidations;
+package io.github.pedromeerholz.Car.Parts.Stock.validations.userValidations;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

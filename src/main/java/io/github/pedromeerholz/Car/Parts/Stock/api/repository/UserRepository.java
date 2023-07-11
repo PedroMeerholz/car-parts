@@ -1,6 +1,6 @@
 package io.github.pedromeerholz.Car.Parts.Stock.api.repository;
 
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.User;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

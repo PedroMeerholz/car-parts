@@ -1,4 +1,4 @@
-package io.github.pedromeerholz.Car.Parts.Stock.api.model;
+package io.github.pedromeerholz.Car.Parts.Stock.api.model.user;
 
 import jakarta.persistence.*;
 

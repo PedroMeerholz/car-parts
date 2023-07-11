@@ -1,6 +1,6 @@
-package io.github.pedromeerholz.Car.Parts.Stock.userValidations;
+package io.github.pedromeerholz.Car.Parts.Stock.validations.userValidations;
 
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.User;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.user.User;
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
