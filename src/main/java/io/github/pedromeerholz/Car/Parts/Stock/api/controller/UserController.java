@@ -17,7 +17,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser(@RequestBody NewUserDto newUserDto) {
+    public HttpStatus createUser(@RequestBody NewUserDto newUserDto) {
         return this.userService.createUser(newUserDto);
     }
 

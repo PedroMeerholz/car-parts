@@ -57,7 +57,8 @@ public class UserValidator {
         return true;
     }
 
-    public boolean validateEncodedPassword(BCryptPasswordEncoder encoder, String receivedPassword, String encodedPassword) {
+    public boolean validateEncodedPassword(BCryptPasswordEncoder encoder, String receivedPassword,
+                                           String encodedPassword) {
         boolean isPasswordMatches = encoder.matches(receivedPassword, encodedPassword);
         if (!isPasswordMatches) {
             return false;
@@ -65,17 +66,11 @@ public class UserValidator {
         return true;
     }
 
-    public String validateUserDataToCreate(String name, String email, String password) {
-        if (!this.emptyValueValidation(name)) {
-            return "Favor preencher seu nome corretamente.";
+    public boolean validateUserDataToCreate(String name, String email, String password) {
+        if (!this.emptyValueValidation(name) || !this.validateEmail(email) || !this.validatePasswordPattern(password)) {
+            return false;
         }
-        if (!this.validateEmail(email)) {
-            return "Preencha um e-mail válido.";
-        }
-        if (!this.validatePasswordPattern(password)) {
-            return "Preencha uma senha válida. A senha deve possuir no mínimo oito caracteres.";
-        }
-        return "Usuário cadastrado com sucesso!";
+        return true;
     }
 
     public boolean validateUserDataToUpdate(String name, String email) {

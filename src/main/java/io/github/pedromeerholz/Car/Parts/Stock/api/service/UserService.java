@@ -17,31 +17,32 @@ public class UserService {
     private UserValidator userValidator;
     private RegisteredEmailValidator registeredEmailValidator;
     private BCryptPasswordEncoder encoder;
-    private String resultMessage;
 
-    public UserService(UserRepository userRepository, RegisteredEmailValidator registeredEmailValidator, BCryptPasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, RegisteredEmailValidator registeredEmailValidator,
+                       BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.userValidator = new UserValidator();
         this.registeredEmailValidator = registeredEmailValidator;
     }
 
-    public String createUser(NewUserDto newUserDto) {
-        this.resultMessage = this.userValidator.validateUserDataToCreate(newUserDto.getName(), newUserDto.getEmail(),
-                newUserDto.getPassword());
+    public HttpStatus createUser(NewUserDto newUserDto) {
         try {
-            if (this.resultMessage.equals("Usuário cadastrado com sucesso!")) {
+            boolean isValidUserData = this.userValidator.validateUserDataToCreate(newUserDto.getName(),
+                    newUserDto.getEmail(), newUserDto.getPassword());
+            if (isValidUserData) {
                 User user = new User();
                 user.setName(newUserDto.getName());
                 user.setEmail(newUserDto.getEmail());
                 String encodedPassword = encoder.encode(newUserDto.getPassword());
                 user.setPassword(encodedPassword);
                 this.userRepository.save(user);
+                return HttpStatus.ACCEPTED;
             }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        return this.resultMessage;
+        return HttpStatus.UNAUTHORIZED;
     }
 
     public HttpStatus updateUser(String email, UpdateUserDto updateUserDto) {
@@ -73,10 +74,12 @@ public class UserService {
             }
             if (this.userRepository.findByEmail(email).get() != null) {
                 User currentUser = this.userRepository.findByEmail(email).get();
-                boolean isValidPassword = this.userValidator.validatePasswordToUpdate(updateUserPasswordDto.getPassword());
+                boolean isValidPassword = this.userValidator.validatePasswordToUpdate(
+                        updateUserPasswordDto.getPassword());
                 if (isValidPassword) {
                     String newEncodedPassword = this.encoder.encode(updateUserPasswordDto.getPassword());
-                    User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(), newEncodedPassword);
+                    User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(),
+                            currentUser.getEmail(), newEncodedPassword);
                     this.userRepository.save(updatedUser);
                     return HttpStatus.ACCEPTED;
                 }
