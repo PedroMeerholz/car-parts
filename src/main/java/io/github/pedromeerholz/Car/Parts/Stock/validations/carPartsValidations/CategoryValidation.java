@@ -19,8 +19,6 @@ public class CategoryValidation {
     public boolean validateCategory(CarPartCategoryRepository carPartCategoryRepository, String category) {
         boolean isEmptyCategoryName = this.emptyValueValidator.emptyValueValidation(category);
         boolean isRegisteredCategory = this.isRegisteredCategory(carPartCategoryRepository, category);
-        System.out.println(isEmptyCategoryName);
-        System.out.println(isRegisteredCategory);
         if (!isEmptyCategoryName || !isRegisteredCategory) {
             return false;
         }

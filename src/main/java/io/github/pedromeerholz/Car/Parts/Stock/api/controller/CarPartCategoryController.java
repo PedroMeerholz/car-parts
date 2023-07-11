@@ -28,7 +28,8 @@ public class CarPartCategoryController {
     }
 
     @PatchMapping("/update")
-    public HttpStatus updateCarPartCategory(@RequestBody CarPartCategoryDto carPartCategoryDto, @RequestParam String categoryToUpdate) {
+    public HttpStatus updateCarPartCategory(@RequestBody CarPartCategoryDto carPartCategoryDto,
+                                            @RequestParam String categoryToUpdate) {
         return this.carPartCategoryService.updateCarPartCategory(carPartCategoryDto, categoryToUpdate);
     }
 }

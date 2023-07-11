@@ -10,6 +10,8 @@ public class CarPartCategory {
     private Long id;
     @Column(name = "category")
     private String category;
+    @Column(name = "enabled")
+    private boolean enabled;
 
     public Long getId() {
         return id;
@@ -25,5 +27,13 @@ public class CarPartCategory {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

@@ -27,6 +27,7 @@ public class CarPartCategoryService {
             if (isValidCategory) {
                 CarPartCategory carPartCategory = new CarPartCategory();
                 carPartCategory.setCategory(carPartCategoryDto.getCategory());
+                carPartCategory.setEnabled(carPartCategoryDto.isEnabled());
                 this.carPartCategoryRepository.save(carPartCategory);
                 return HttpStatus.OK;
             }
@@ -50,6 +51,7 @@ public class CarPartCategoryService {
                 CarPartCategory updatedCarPartCategory = new CarPartCategory();
                 updatedCarPartCategory.setId(currentCarPartCategory.getId());
                 updatedCarPartCategory.setCategory(carPartCategoryDto.getCategory());
+                updatedCarPartCategory.setEnabled(carPartCategoryDto.isEnabled());
                 this.carPartCategoryRepository.save(updatedCarPartCategory);
                 return HttpStatus.ACCEPTED;
             }
@@ -57,6 +59,6 @@ public class CarPartCategoryService {
             exception.printStackTrace();
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return HttpStatus.NOT_ACCEPTABLE;
+        return HttpStatus.NOT_MODIFIED;
     }
 }
