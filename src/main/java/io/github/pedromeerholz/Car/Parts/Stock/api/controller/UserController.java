@@ -22,11 +22,7 @@ public class UserController {
 
     @PatchMapping("/update")
     public String updateUser(@RequestBody UpdateUserDto updateUserDto, @RequestParam String email) {
-        boolean isUserUpdated = this.userService.updateUser(email, updateUserDto);
-        if (isUserUpdated) {
-            return "Os dados do usuário foram atualizados";
-        }
-        return "Não foi possível atualizar os dados do usuário. Verifique as informações e tente novamente.";
+        return this.userService.updateUser(email, updateUserDto);
     }
 
     @PatchMapping("/updatePassword")

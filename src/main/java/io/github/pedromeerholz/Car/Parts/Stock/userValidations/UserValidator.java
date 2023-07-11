@@ -47,16 +47,26 @@ public class UserValidator {
         return true;
     }
 
-    public String validateUserData(String name, String email, String password) {
+    public String validateUserDataToCreate(String name, String email, String password) {
         if (!this.emptyValueValidation(name)) {
-            return "Favor preencher seu nome";
+            return "Favor preencher seu nome corretamente.";
         }
         if (!this.validateEmail(email)) {
-            return "Preencha um e-mail válido";
+            return "Preencha um e-mail válido.";
         }
         if (!this.validatePassword(password)) {
             return "Preencha uma senha válida. A senha deve possuir no mínimo oito caracteres.";
         }
         return "Usuário cadastrado com sucesso!";
+    }
+
+    public String validateUserDataToUpdate(String name, String email) {
+        if (!this.emptyValueValidation(name)) {
+            return "Favor informar seu nome corretamente.";
+        }
+        if (!this.validateEmail(email)) {
+            return "Preencha um e-mail válido.";
+        }
+        return "Usuário pode ser atualizado";
     }
 }
