@@ -23,7 +23,7 @@ class UserValidatorTest {
     @Test
     void validatePassword() {
         String password = "12345678";
-        boolean result = this.userValidator.validatePassword(password);
+        boolean result = this.userValidator.validatePasswordPattern(password);
         Assertions.assertEquals(true, result);
     }
 
@@ -47,7 +47,7 @@ class UserValidatorTest {
     @Test
     void validatePasswordToUpdate() {
         String password = "12345678";
-        String resultMessage = this.userValidator.validatePasswordToUpdate(password);
-        Assertions.assertEquals("Senha pode ser alterada", resultMessage);
+        boolean result = this.userValidator.validatePasswordToUpdate(password);
+        Assertions.assertEquals(true, result);
     }
 }
