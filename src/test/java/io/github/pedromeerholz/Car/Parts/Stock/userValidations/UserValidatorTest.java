@@ -28,12 +28,19 @@ class UserValidatorTest {
     }
 
     @Test
-    void validateUserData() {
+    void validateUserDataToCreate() {
         String name = "Pedro";
         String email = "pedro@gmail.com";
         String password = "123456789";
-        String resultMessage = this.userValidator.validateUserData(name, email, password);
-        System.out.println(resultMessage);
+        String resultMessage = this.userValidator.validateUserDataToCreate(name, email, password);
         Assertions.assertEquals("Usuário cadastrado com sucesso!", resultMessage);
+    }
+
+    @Test
+    void validadeUserDataToUpdate() {
+        String name = "Pedro";
+        String email = "pedro@gmail.com";
+        String resultMessage = this.userValidator.validateUserDataToUpdate(name, email);
+        Assertions.assertEquals("Usuário atualizado com sucesso!", resultMessage);
     }
 }
