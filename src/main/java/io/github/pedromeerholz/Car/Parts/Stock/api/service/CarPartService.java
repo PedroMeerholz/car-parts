@@ -43,7 +43,8 @@ public class CarPartService {
         return HttpStatus.NOT_ACCEPTABLE;
     }
 
-    private CarPart generateCarPartToCreate(String name, String description, int quantity, Long categoryId, boolean enabled) {
+    private CarPart generateCarPartToCreate(String name, String description, int quantity, Long categoryId,
+                                            boolean enabled) {
         CarPart carPart = new CarPart();
         carPart.setName(name);
         carPart.setDescription(description);
@@ -68,17 +69,16 @@ public class CarPartService {
 
     public HttpStatus updateCarPart(UpdateCarPartDto updateCarPartDto, String carPartToUpdate) {
         try {
-            if (!this.carPartValidator.validateCarPartDataForUpdate(this.carPartCategoryRepository, updateCarPartDto)) {
+            Long updatedCategoryId = this.getCategoryId(updateCarPartDto.getCategory());
+            if (!this.carPartValidator.validateCarPartDataForUpdate(this.carPartCategoryRepository, updateCarPartDto) ||
+                    updatedCategoryId == null) {
                 return HttpStatus.NOT_ACCEPTABLE;
             }
             Optional<CarPart> optionalCurrentCarPart = this.carPartRepository.findByName(carPartToUpdate);
             if (optionalCurrentCarPart.isPresent()) {
                 CarPart currentCarPart = optionalCurrentCarPart.get();
-                CarPart updatedCarPart = currentCarPart;
-                updatedCarPart.setName(updateCarPartDto.getName());
-                updatedCarPart.setDescription(updateCarPartDto.getDescription());
-                updatedCarPart.setQuantity(currentCarPart.getQuantity());
-                updatedCarPart.setEnabled(updateCarPartDto.isEnabled());
+                CarPart updatedCarPart = this.generateCarPartToUpdate(currentCarPart, updateCarPartDto.getName(),
+                        updateCarPartDto.getDescription(), updatedCategoryId, updateCarPartDto.isEnabled());
                 this.carPartRepository.save(updatedCarPart);
                 return HttpStatus.OK;
             }
@@ -87,5 +87,15 @@ public class CarPartService {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return HttpStatus.NOT_MODIFIED;
+    }
+
+    private CarPart generateCarPartToUpdate(CarPart currentCarPart, String name, String description, Long categoryId,
+                                            boolean enabled) {
+        CarPart carPart = currentCarPart;
+        carPart.setName(name);
+        carPart.setDescription(description);
+        carPart.setCategory(categoryId);
+        carPart.setEnabled(enabled);
+        return carPart;
     }
 }
