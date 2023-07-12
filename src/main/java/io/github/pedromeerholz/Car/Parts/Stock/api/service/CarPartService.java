@@ -67,7 +67,7 @@ public class CarPartService {
         return this.carPartRepository.findAll();
     }
 
-    public HttpStatus updateCarPart(UpdateCarPartDto updateCarPartDto, String carPartToUpdate) {
+    public HttpStatus updateCarPartInfo(UpdateCarPartDto updateCarPartDto, String carPartToUpdate) {
         try {
             Long updatedCategoryId = this.getCategoryId(updateCarPartDto.getCategory());
             if (!this.carPartValidator.validateCarPartDataForUpdate(this.carPartCategoryRepository, updateCarPartDto) ||
@@ -77,7 +77,7 @@ public class CarPartService {
             Optional<CarPart> optionalCurrentCarPart = this.carPartRepository.findByName(carPartToUpdate);
             if (optionalCurrentCarPart.isPresent()) {
                 CarPart currentCarPart = optionalCurrentCarPart.get();
-                CarPart updatedCarPart = this.generateCarPartToUpdate(currentCarPart, updateCarPartDto.getName(),
+                CarPart updatedCarPart = this.generateCarPartToUpdateInfo(currentCarPart, updateCarPartDto.getName(),
                         updateCarPartDto.getDescription(), updatedCategoryId, updateCarPartDto.isEnabled());
                 this.carPartRepository.save(updatedCarPart);
                 return HttpStatus.OK;
@@ -89,13 +89,39 @@ public class CarPartService {
         return HttpStatus.NOT_MODIFIED;
     }
 
-    private CarPart generateCarPartToUpdate(CarPart currentCarPart, String name, String description, Long categoryId,
+    private CarPart generateCarPartToUpdateInfo(CarPart currentCarPart, String name, String description, Long categoryId,
                                             boolean enabled) {
         CarPart carPart = currentCarPart;
         carPart.setName(name);
         carPart.setDescription(description);
         carPart.setCategory(categoryId);
         carPart.setEnabled(enabled);
+        return carPart;
+    }
+
+    public HttpStatus updateCarPartQuantity(String carPartToUpdate, int quantityToUpdate) {
+        try {
+            Optional<CarPart> optionalCurrentCarPart = this.carPartRepository.findByName(carPartToUpdate);
+            if (optionalCurrentCarPart.isPresent()) {
+                CarPart currentCarPart = optionalCurrentCarPart.get();
+                CarPart updatedCarPart = this.generateCarPartToUpdateQuantity(currentCarPart, quantityToUpdate);
+                this.carPartRepository.save(updatedCarPart);
+                return HttpStatus.OK;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return HttpStatus.NOT_MODIFIED;
+    }
+
+    private CarPart generateCarPartToUpdateQuantity(CarPart currentCarPart, int quantity) {
+        CarPart carPart = currentCarPart;
+        System.out.printf("Quantity: %d\n", quantity);
+        System.out.println(carPart.getQuantity());
+        int updatedQuantity = carPart.getQuantity() + quantity;
+        carPart.setQuantity(updatedQuantity);
+        System.out.println(carPart.getQuantity());
         return carPart;
     }
 }

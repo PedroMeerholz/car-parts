@@ -28,8 +28,15 @@ public class CarPartController {
         return this.carPartService.listAll();
     }
 
-    @PatchMapping("/update")
-    public HttpStatus updateCarPart(@RequestBody UpdateCarPartDto updateCarPartDto, @RequestParam String carPartToUpdate) {
-        return this.carPartService.updateCarPart(updateCarPartDto, carPartToUpdate);
+    @PatchMapping("/updateInfo")
+    public HttpStatus updateCarPartInfo(@RequestBody UpdateCarPartDto updateCarPartDto,
+                                    @RequestParam String carPartToUpdate) {
+        return this.carPartService.updateCarPartInfo(updateCarPartDto, carPartToUpdate);
+    }
+
+    @PatchMapping("/updateQuantity")
+    public HttpStatus updateCarPartQuantity(@RequestParam String carPartToUpdate, @RequestParam int quantityToUpdate) {
+        System.out.printf("Quantity controller: %d\n", quantityToUpdate);
+        return this.carPartService.updateCarPartQuantity(carPartToUpdate, quantityToUpdate);
     }
 }
