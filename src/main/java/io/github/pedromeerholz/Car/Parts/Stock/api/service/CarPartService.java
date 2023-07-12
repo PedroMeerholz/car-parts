@@ -9,6 +9,7 @@ import io.github.pedromeerholz.Car.Parts.Stock.validations.carPartValidations.Ca
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,5 +59,9 @@ public class CarPartService {
             return carPartCategory.getId();
         }
         return null;
+    }
+
+    public List<CarPart> listAll() {
+        return this.carPartRepository.findAll();
     }
 }
