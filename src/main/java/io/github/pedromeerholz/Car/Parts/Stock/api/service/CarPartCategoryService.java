@@ -3,7 +3,7 @@ package io.github.pedromeerholz.Car.Parts.Stock.api.service;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.CarPartCategory;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.dto.CarPartCategoryDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.CarPartCategoryRepository;
-import io.github.pedromeerholz.Car.Parts.Stock.validations.carPartsValidations.CategoryValidation;
+import io.github.pedromeerholz.Car.Parts.Stock.validations.carPartsCAtegoryValidations.CategoryValidation;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
