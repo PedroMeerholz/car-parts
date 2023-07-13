@@ -6,6 +6,7 @@ import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.dto.NewCarPartDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.dto.UpdateCarPartDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.views.PartsView;
 import io.github.pedromeerholz.Car.Parts.Stock.api.service.carPart.CarPartService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,28 +22,34 @@ public class CarPartController {
     }
 
     @PostMapping("/create")
+    @Operation(summary = "Register a new part", method = "POST")
     public HttpStatus createCarPart(@RequestBody NewCarPartDto newCarPartDto) {
         return this.carPartService.createCarPart(newCarPartDto);
     }
 
     @GetMapping("/listAll")
+    @Operation(summary = "Visualize all registered parts", method = "GET")
     public List<PartsView> listAll() {
         return this.carPartService.listAll();
     }
 
     @PatchMapping("/updateInfo")
+    @Operation(summary = "Update the fields name, description, category and enabled from a registered car part",
+            method = "PATCH")
     public HttpStatus updateCarPartInfo(@RequestBody UpdateCarPartDto updateCarPartDto,
                                     @RequestParam String carPartToUpdate) {
         return this.carPartService.updateCarPartInfo(updateCarPartDto, carPartToUpdate);
     }
 
     @PatchMapping("/updateQuantity")
+    @Operation(summary = "Increase or decrease the available amount of registered car parts", method = "PATCH")
     public HttpStatus updateCarPartQuantity(@RequestParam String carPartToUpdate, @RequestParam int quantityToUpdate) {
         System.out.printf("Quantity controller: %d\n", quantityToUpdate);
         return this.carPartService.updateCarPartQuantity(carPartToUpdate, quantityToUpdate);
     }
 
     @GetMapping("/listHistory")
+    @Operation(summary = "View all update history of car parts information", method = "GET")
     public List<HistoryView> listHistory() {
         return this.carPartService.listHistory();
     }
