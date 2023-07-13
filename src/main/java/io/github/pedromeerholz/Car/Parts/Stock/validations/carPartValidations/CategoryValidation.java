@@ -1,4 +1,4 @@
-package io.github.pedromeerholz.Car.Parts.Stock.validations.carPartsCAtegoryValidations;
+package io.github.pedromeerholz.Car.Parts.Stock.validations.carPartValidations;
 
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.partCategory.CarPartCategory;
 import io.github.pedromeerholz.Car.Parts.Stock.api.repository.carPart.CarPartCategoryRepository;
