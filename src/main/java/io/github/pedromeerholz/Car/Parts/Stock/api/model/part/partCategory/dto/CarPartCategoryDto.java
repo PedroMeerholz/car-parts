@@ -1,4 +1,4 @@
-package io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.dto;
+package io.github.pedromeerholz.Car.Parts.Stock.api.model.part.partCategory.dto;
 
 public class CarPartCategoryDto {
     private String category;

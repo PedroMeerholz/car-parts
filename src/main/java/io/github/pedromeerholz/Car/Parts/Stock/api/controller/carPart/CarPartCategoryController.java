@@ -1,8 +1,8 @@
-package io.github.pedromeerholz.Car.Parts.Stock.api.controller;
+package io.github.pedromeerholz.Car.Parts.Stock.api.controller.carPart;
 
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.CarPartCategory;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.dto.CarPartCategoryDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.service.CarPartCategoryService;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.partCategory.CarPartCategory;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.partCategory.dto.CarPartCategoryDto;
+import io.github.pedromeerholz.Car.Parts.Stock.api.service.carPart.CarPartCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,8 +2,8 @@ package io.github.pedromeerholz.Car.Parts.Stock.validations.carPartValidations;
 
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.dto.NewCarPartDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.dto.UpdateCarPartDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.CarPartCategory;
-import io.github.pedromeerholz.Car.Parts.Stock.api.repository.CarPartCategoryRepository;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.partCategory.CarPartCategory;
+import io.github.pedromeerholz.Car.Parts.Stock.api.repository.carPart.CarPartCategoryRepository;
 import io.github.pedromeerholz.Car.Parts.Stock.validations.EmptyValueValidator;
 
 import java.util.Optional;

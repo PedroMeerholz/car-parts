@@ -1,11 +1,13 @@
-package io.github.pedromeerholz.Car.Parts.Stock.api.service;
+package io.github.pedromeerholz.Car.Parts.Stock.api.service.carPart;
 
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.CarPart;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.history.HistoryView;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.dto.NewCarPartDto;
 import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.dto.UpdateCarPartDto;
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.CarPartCategory;
-import io.github.pedromeerholz.Car.Parts.Stock.api.repository.CarPartCategoryRepository;
-import io.github.pedromeerholz.Car.Parts.Stock.api.repository.CarPartRepository;
+import io.github.pedromeerholz.Car.Parts.Stock.api.model.part.partCategory.CarPartCategory;
+import io.github.pedromeerholz.Car.Parts.Stock.api.repository.carPart.CarPartCategoryRepository;
+import io.github.pedromeerholz.Car.Parts.Stock.api.repository.carPart.CarPartRepository;
+import io.github.pedromeerholz.Car.Parts.Stock.api.repository.carPart.HistoryViewRepository;
 import io.github.pedromeerholz.Car.Parts.Stock.validations.carPartValidations.CarPartValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,14 @@ import java.util.Optional;
 public class CarPartService {
     private final CarPartRepository carPartRepository;
     private final CarPartCategoryRepository carPartCategoryRepository;
+    private final HistoryViewRepository historyViewRepository;
     private final CarPartValidator carPartValidator = new CarPartValidator();
 
-    public CarPartService(CarPartRepository carPartRepository, CarPartCategoryRepository carPartCategoryRepository) {
+    public CarPartService(CarPartRepository carPartRepository, CarPartCategoryRepository carPartCategoryRepository,
+                          HistoryViewRepository historyViewRepository) {
         this.carPartRepository = carPartRepository;
         this.carPartCategoryRepository = carPartCategoryRepository;
+        this.historyViewRepository = historyViewRepository;
     }
 
     public HttpStatus createCarPart(NewCarPartDto newCarPartDto) {
@@ -123,5 +128,9 @@ public class CarPartService {
         carPart.setQuantity(updatedQuantity);
         System.out.println(carPart.getQuantity());
         return carPart;
+    }
+
+    public List<HistoryView> listHistory() {
+        return this.historyViewRepository.findAll();
     }
 }

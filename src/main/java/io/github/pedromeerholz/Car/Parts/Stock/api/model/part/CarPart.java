@@ -1,6 +1,5 @@
 package io.github.pedromeerholz.Car.Parts.Stock.api.model.part;
 
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.CarPartCategory;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,6 +7,7 @@ import jakarta.persistence.*;
 public class CarPart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "partID")
     private Long id;
     @Column(name = "name")
     private String name;

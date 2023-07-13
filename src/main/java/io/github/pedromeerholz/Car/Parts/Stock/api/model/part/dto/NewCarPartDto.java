@@ -1,7 +1,5 @@
 package io.github.pedromeerholz.Car.Parts.Stock.api.model.part.dto;
 
-import io.github.pedromeerholz.Car.Parts.Stock.api.model.partCategory.CarPartCategory;
-
 public class NewCarPartDto {
     private String name;
     private String description;
