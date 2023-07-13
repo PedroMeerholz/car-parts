@@ -23,7 +23,7 @@ public class ItemController {
     @PostMapping("/create")
     @Operation(summary = "Register a new item", method = "POST")
     public HttpStatus createItem(@RequestBody NewItemDto newItemDto) {
-        return this.itemService.createCarPart(newItemDto);
+        return this.itemService.createItem(newItemDto);
     }
 
     @GetMapping("/listAll")
@@ -36,15 +36,15 @@ public class ItemController {
     @Operation(summary = "Update the fields name, description, category and enabled from a registered item",
             method = "PATCH")
     public HttpStatus updateItemInfo(@RequestBody UpdateItemDto updateItemDto,
-                                    @RequestParam String carPartToUpdate) {
-        return this.itemService.updateCarPartInfo(updateItemDto, carPartToUpdate);
+                                    @RequestParam String itemToUpdate) {
+        return this.itemService.updateItemInfo(updateItemDto, itemToUpdate);
     }
 
     @PatchMapping("/updateQuantity")
     @Operation(summary = "Increase or decrease the available amount of registered item", method = "PATCH")
-    public HttpStatus updateItemQuantity(@RequestParam String carPartToUpdate, @RequestParam int quantityToUpdate) {
+    public HttpStatus updateItemQuantity(@RequestParam String itemToUpdate, @RequestParam int quantityToUpdate) {
         System.out.printf("Quantity controller: %d\n", quantityToUpdate);
-        return this.itemService.updateCarPartQuantity(carPartToUpdate, quantityToUpdate);
+        return this.itemService.updateItemQuantity(itemToUpdate, quantityToUpdate);
     }
 
     @GetMapping("/listHistory")

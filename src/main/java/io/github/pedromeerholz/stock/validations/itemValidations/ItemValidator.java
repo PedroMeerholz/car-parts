@@ -8,11 +8,11 @@ import io.github.pedromeerholz.stock.validations.EmptyValueValidator;
 
 import java.util.Optional;
 
-public class CarPartValidator {
+public class ItemValidator {
     private final EmptyValueValidator emptyValueValidator = new EmptyValueValidator();
 
-    public boolean validateCarPartDataForCreate(ItemCategoryRepository itemCategoryRepository,
-                                                NewItemDto newItemDto) {
+    public boolean validateItemDataForCreate(ItemCategoryRepository itemCategoryRepository,
+                                             NewItemDto newItemDto) {
         boolean isNameEmpty = this.emptyValueValidator.emptyValueValidation(newItemDto.getName());
         boolean isDescriptionEmpty = this.emptyValueValidator.emptyValueValidation(newItemDto.getDescription());
         boolean categoryExists = this.verifyCategoryExists(itemCategoryRepository, newItemDto.getCategory());
@@ -23,8 +23,8 @@ public class CarPartValidator {
         return true;
     }
 
-    public boolean validateCarPartDataForUpdate(ItemCategoryRepository itemCategoryRepository,
-                                                UpdateItemDto updateItemDto) {
+    public boolean validateItemDataForUpdate(ItemCategoryRepository itemCategoryRepository,
+                                             UpdateItemDto updateItemDto) {
         boolean isNameEmpty = this.emptyValueValidator.emptyValueValidation(updateItemDto.getName());
         boolean isDescriptionEmpty = this.emptyValueValidator.emptyValueValidation(updateItemDto.getDescription());
         boolean categoryExists = this.verifyCategoryExists(itemCategoryRepository, updateItemDto.getCategory());
@@ -35,8 +35,8 @@ public class CarPartValidator {
     }
 
     private boolean verifyCategoryExists(ItemCategoryRepository itemCategoryRepository, String category) {
-        Optional<ItemCategory> carPartCategory = itemCategoryRepository.findByCategory(category);
-        if (carPartCategory.isPresent()) {
+        Optional<ItemCategory> ItemCategory = itemCategoryRepository.findByCategory(category);
+        if (ItemCategory.isPresent()) {
             return true;
         }
         return false;
