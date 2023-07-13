@@ -1,16 +1,14 @@
-package io.github.pedromeerholz.Car.Parts.Stock.api.model.part.history;
+package io.github.pedromeerholz.Car.Parts.Stock.api.model.part.views;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "historyview")
-public class HistoryView {
+@Table(name = "partsview")
+public class PartsView {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "historyid")
-    private Long historyId;
-    @Column(name = "partid")
-    private Long partId;
+    @Column(name = "partID")
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "description")
@@ -19,17 +17,11 @@ public class HistoryView {
     private int quantity;
     @Column(name = "category")
     private String category;
-    @Column(name = "date")
-    private String date;
     @Column(name = "enabled")
     private boolean enabled;
 
-    public Long getHistoryId() {
-        return historyId;
-    }
-
-    public Long getPartId() {
-        return partId;
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -46,10 +38,6 @@ public class HistoryView {
 
     public String getCategory() {
         return category;
-    }
-
-    public String getDate() {
-        return date;
     }
 
     public boolean isEnabled() {
