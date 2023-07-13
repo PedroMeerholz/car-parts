@@ -1,7 +1,7 @@
 # Stock API
 
 ## Objetivo
-<p>API feita para gerenciamento de estoque</p>
+<p>Gerenciamento de estoque</p>
 
 ### Funcionalidades
 <ul>
