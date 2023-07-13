@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.github.pedromeerholz</groupId>
-	<artifactId>Car-Parts-Stock</artifactId>
+	<artifactId>stock-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Car-Parts-Stock</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Stock API</name>
+	<description>API to manage your stock</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -65,7 +65,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>carParts</finalName>
+		<finalName>stockApi</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
