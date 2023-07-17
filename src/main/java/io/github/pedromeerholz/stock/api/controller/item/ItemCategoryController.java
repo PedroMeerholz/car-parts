@@ -20,8 +20,8 @@ public class ItemCategoryController {
 
     @PostMapping("/create")
     @Operation(summary = "Create a new item category", method = "POST")
-    public HttpStatus createItemCategory(@RequestBody ItemCategoryDto itemCategoryDto) {
-        return this.itemCategoryService.createItemCategory(itemCategoryDto);
+    public HttpStatus createItemCategory(@RequestBody ItemCategoryDto itemCategoryDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+        return this.itemCategoryService.createItemCategory(itemCategoryDto, email, authorizationToken);
     }
 
     @GetMapping("/listAll")
@@ -32,8 +32,7 @@ public class ItemCategoryController {
 
     @PutMapping("/update")
     @Operation(summary = "Update a registered item category", method = "PUT")
-    public HttpStatus updateItemCategory(@RequestBody ItemCategoryDto itemCategoryDto,
-                                            @RequestParam String categoryToUpdate) {
-        return this.itemCategoryService.updateItemCategory(itemCategoryDto, categoryToUpdate);
+    public HttpStatus updateItemCategory(@RequestBody ItemCategoryDto itemCategoryDto, @RequestParam String categoryToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+        return this.itemCategoryService.updateItemCategory(itemCategoryDto, categoryToUpdate, email, authorizationToken);
     }
 }

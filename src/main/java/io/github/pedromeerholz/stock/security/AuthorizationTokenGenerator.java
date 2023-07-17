@@ -17,7 +17,6 @@ public class AuthorizationTokenGenerator {
         String token = name + "." + stringRegisterDate + "." + email;
         byte[] encodedToken = digest.digest(token.getBytes());
 
-        System.out.println(encodedToken.toString());
         return encodedToken.toString();
     }
 }
