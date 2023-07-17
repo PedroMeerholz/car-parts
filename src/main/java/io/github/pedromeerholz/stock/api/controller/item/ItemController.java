@@ -22,29 +22,27 @@ public class ItemController {
 
     @PostMapping("/create")
     @Operation(summary = "Register a new item", method = "POST")
-    public HttpStatus createItem(@RequestBody NewItemDto newItemDto) {
-        return this.itemService.createItem(newItemDto);
+    public HttpStatus createItem(@RequestBody NewItemDto newItemDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+        return this.itemService.createItem(newItemDto, email, authorizationToken);
+    }
+
+    @PatchMapping("/updateInfo")
+    @Operation(summary = "Update the fields name, description, category and enabled from a registered item", method = "PATCH")
+    public HttpStatus updateItemInfo(@RequestBody UpdateItemDto updateItemDto, @RequestParam String itemToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationtoken) {
+        return this.itemService.updateItemInfo(updateItemDto, itemToUpdate, email, authorizationtoken);
+    }
+
+    @PatchMapping("/updateQuantity")
+    @Operation(summary = "Increase or decrease the available amount of registered item", method = "PATCH")
+    public HttpStatus updateItemQuantity(@RequestParam String itemToUpdate, @RequestParam int quantityToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationtoken) {
+        System.out.printf("Quantity controller: %d\n", quantityToUpdate);
+        return this.itemService.updateItemQuantity(itemToUpdate, quantityToUpdate, email, authorizationtoken);
     }
 
     @GetMapping("/listAll")
     @Operation(summary = "Visualize all registered items", method = "GET")
     public List<ItemsView> listAll() {
         return this.itemService.listAll();
-    }
-
-    @PatchMapping("/updateInfo")
-    @Operation(summary = "Update the fields name, description, category and enabled from a registered item",
-            method = "PATCH")
-    public HttpStatus updateItemInfo(@RequestBody UpdateItemDto updateItemDto,
-                                    @RequestParam String itemToUpdate) {
-        return this.itemService.updateItemInfo(updateItemDto, itemToUpdate);
-    }
-
-    @PatchMapping("/updateQuantity")
-    @Operation(summary = "Increase or decrease the available amount of registered item", method = "PATCH")
-    public HttpStatus updateItemQuantity(@RequestParam String itemToUpdate, @RequestParam int quantityToUpdate) {
-        System.out.printf("Quantity controller: %d\n", quantityToUpdate);
-        return this.itemService.updateItemQuantity(itemToUpdate, quantityToUpdate);
     }
 
     @GetMapping("/listHistory")
