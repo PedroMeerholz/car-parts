@@ -25,14 +25,14 @@ public class UserController {
 
     @PatchMapping("/update")
     @Operation(summary = "Update the user name and email", method = "PATCH")
-    public HttpStatus updateUser(@RequestBody UpdateUserDto updateUserDto, @RequestParam String email) {
-        return this.userService.updateUser(email, updateUserDto);
+    public HttpStatus updateUser(@RequestBody UpdateUserDto updateUserDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+        return this.userService.updateUser(email, updateUserDto, authorizationToken);
     }
 
     @PatchMapping("/updatePassword")
     @Operation(summary = "Update the user password", method = "PATCH")
-    public HttpStatus updateUserPassword(@RequestBody UpdateUserPasswordDto updateUserPasswordDto, @RequestParam String email) {
-        return this.userService.updateUserPassword(email, updateUserPasswordDto);
+    public HttpStatus updateUserPassword(@RequestBody UpdateUserPasswordDto updateUserPasswordDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+        return this.userService.updateUserPassword(email, updateUserPasswordDto, authorizationToken);
     }
 
     @GetMapping("/login")
