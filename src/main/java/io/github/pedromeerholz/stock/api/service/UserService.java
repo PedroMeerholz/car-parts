@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -119,13 +120,16 @@ public class UserService {
         try {
             if(this.userRepository.findByEmail(email).get() != null) {
                 User credentials = this.userRepository.findByEmail(email).get();
-                if (!this.userValidator.validateEncodedPassword(this.encoder, password, credentials.getPassword())) {
-                    return HttpStatus.UNAUTHORIZED;
+                if (this.userValidator.validateEncodedPassword(this.encoder, password, credentials.getPassword())) {
+                    return HttpStatus.ACCEPTED;
                 }
             }
+        } catch (NoSuchElementException exception) {
+            exception.printStackTrace();
         } catch (Exception exception) {
             exception.printStackTrace();
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return HttpStatus.ACCEPTED;
+        return HttpStatus.UNAUTHORIZED;
     }
 }
