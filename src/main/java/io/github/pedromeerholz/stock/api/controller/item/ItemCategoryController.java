@@ -26,9 +26,15 @@ public class ItemCategoryController {
     }
 
     @GetMapping("/listAll")
-    @Operation(summary = "Visualize all registered item cateogories", method = "GET")
+    @Operation(summary = "Visualize all registered item categories", method = "GET")
     public List<ItemCategoryDto> listAll() {
         return this.itemCategoryService.listAll();
+    }
+
+    @GetMapping("/listAllByStatus")
+    @Operation(summary = "Visualize all registered item categories by status", method = "GET")
+    public List<ItemCategoryDto> listAllCategoriesByStatus(@RequestParam boolean status) {
+        return this.itemCategoryService.listAllCategoriesByStatus(status);
     }
 
     @PutMapping("/update")

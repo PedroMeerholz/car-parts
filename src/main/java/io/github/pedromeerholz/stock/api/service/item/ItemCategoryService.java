@@ -63,6 +63,26 @@ public class ItemCategoryService {
         return new ArrayList<>();
     }
 
+    public List<ItemCategoryDto> listAllCategoriesByStatus(boolean status) {
+        Optional<List<ItemCategory>> optionalItemCategories = this.itemCategoryRepository.findByStatus(status);
+        if (optionalItemCategories.isPresent()) {
+            List<ItemCategory> categories = optionalItemCategories.get();
+            return this.convertItemCategoryListToItemCategoryDtoList(categories);
+        }
+        return new ArrayList<>();
+    }
+
+    private List<ItemCategoryDto> convertItemCategoryListToItemCategoryDtoList(List<ItemCategory> categories) {
+        List<ItemCategoryDto> itemCategoryDtos = new ArrayList<>();
+        for (ItemCategory category : categories) {
+            ItemCategoryDto itemCategoryDto = new ItemCategoryDto();
+            itemCategoryDto.setCategory(category.getCategory());
+            itemCategoryDto.setEnabled(category.isEnabled());
+            itemCategoryDtos.add(itemCategoryDto);
+        }
+        return itemCategoryDtos;
+    }
+
     public ResponseEntity<ResponseDto> updateItemCategory(ItemCategoryDto itemCategoryDto, String categoryToUpdate, String email, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
