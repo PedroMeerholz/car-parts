@@ -56,4 +56,10 @@ public class ItemController {
     public List<HistoryViewDto> listHistory() {
         return this.itemService.listHistory();
     }
+
+    @GetMapping("/listItemHistory")
+    @Operation(summary = "View all update history of an item information", method = "GET")
+    public List<HistoryViewDto> listItemHistory(@RequestParam String itemName) {
+        return this.itemService.listItemHistory(itemName);
+    }
 }

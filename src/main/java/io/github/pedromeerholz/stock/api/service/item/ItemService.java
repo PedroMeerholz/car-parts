@@ -192,12 +192,22 @@ public class ItemService {
     public List<HistoryViewDto> listHistory() {
         List<HistoryView> historyView = this.historyViewRepository.findAll();
         if (!historyView.isEmpty()) {
-            return this.convertHistoryViewToDto(historyView);
+            return this.convertHistoryViewToDtos(historyView);
         }
         return new ArrayList<>();
     }
 
-    private List<HistoryViewDto> convertHistoryViewToDto(List<HistoryView> historyView) {
+
+    public List<HistoryViewDto> listItemHistory(String itemName) {
+        Optional<List<HistoryView>> historyView = this.historyViewRepository.findByName(itemName);
+        if (historyView.isPresent()) {
+            List<HistoryView> history = historyView.get();
+            return this.convertHistoryViewToDtos(history);
+        }
+        return new ArrayList<HistoryViewDto>();
+    }
+
+    private List<HistoryViewDto> convertHistoryViewToDtos(List<HistoryView> historyView) {
         List<HistoryViewDto> historyViewDtos = new ArrayList<>();
         for (HistoryView history : historyView) {
             HistoryViewDto historyViewDto = new HistoryViewDto();
