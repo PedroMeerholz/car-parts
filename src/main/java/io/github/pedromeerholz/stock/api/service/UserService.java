@@ -1,16 +1,14 @@
 package io.github.pedromeerholz.stock.api.service;
 
 import io.github.pedromeerholz.stock.api.model.user.User;
-import io.github.pedromeerholz.stock.api.model.user.dto.AuthorizationTokenDto;
-import io.github.pedromeerholz.stock.api.model.user.dto.NewUserDto;
-import io.github.pedromeerholz.stock.api.model.user.dto.UpdateUserDto;
-import io.github.pedromeerholz.stock.api.model.user.dto.UpdateUserPasswordDto;
+import io.github.pedromeerholz.stock.api.model.user.dto.*;
 import io.github.pedromeerholz.stock.api.repository.UserRepository;
 import io.github.pedromeerholz.stock.security.AuthorizationTokenGenerator;
 import io.github.pedromeerholz.stock.validations.AuthorizationTokenValidator;
 import io.github.pedromeerholz.stock.validations.userValidations.RegisteredEmailValidator;
 import io.github.pedromeerholz.stock.validations.userValidations.UserValidator;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +34,7 @@ public class UserService {
         this.authorizationTokenValidator = new AuthorizationTokenValidator();
     }
 
-    public AuthorizationTokenDto createUser(NewUserDto newUserDto) {
+    public ResponseEntity<UserResponseDto> createUser(NewUserDto newUserDto) {
         try {
             boolean isValidUserData = this.userValidator.validateUserDataToCreate(newUserDto.getName(),
                     newUserDto.getEmail(), newUserDto.getPassword());
@@ -50,62 +48,53 @@ public class UserService {
                         newUserDto.getName(), newUserDto.getEmail());
                 user.setAuthorizationToken(authorizationToken);
                 this.userRepository.save(user);
-                return new AuthorizationTokenDto(authorizationToken);
+                return new ResponseEntity(new AuthorizationTokenDto(authorizationToken), HttpStatus.OK);
             }
+            return new ResponseEntity(new ErrorMessageDto("Os dados informados não são válidos"), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new AuthorizationTokenDto(null);
+            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new AuthorizationTokenDto(null);
     }
 
-    public HttpStatus updateUser(String email, UpdateUserDto updateUserDto, String authorizationToken) {
+    public ResponseEntity<UserResponseDto> updateUser(String email, UpdateUserDto updateUserDto, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
-            if (isUserAuthorized == false) {
-                return HttpStatus.UNAUTHORIZED;
-            }
             boolean isRegisteredEmail = this.registeredEmailValidator.isRegisteredEmail(email);
-            if (isRegisteredEmail == false) {
-                return HttpStatus.UNAUTHORIZED;
-            }
             boolean isValidUserData = this.userValidator.validateUserDataToUpdate(updateUserDto.getName(), updateUserDto.getEmail());
-            if (isValidUserData) {
+            if (isUserAuthorized && isRegisteredEmail && isValidUserData) {
                 User currentUser = this.userRepository.findByEmail(email).get();
                 User updatedUser = this.createUpdatedUser(currentUser.getId(), updateUserDto.getName(), updateUserDto.getEmail(), currentUser.getPassword(), currentUser.getAuthorizationToken());
                 this.userRepository.save(updatedUser);
-                return HttpStatus.ACCEPTED;
+                return new ResponseEntity(HttpStatus.OK);
             }
+            return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
         } catch (Exception exception) {
             exception.printStackTrace();
+            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return HttpStatus.UNAUTHORIZED;
     }
 
-    public HttpStatus updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto, String authorizationToken) {
+    public ResponseEntity<UserResponseDto> updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
-            if (isUserAuthorized == false) {
-                return HttpStatus.UNAUTHORIZED;
-            }
             boolean isRegisteredEmail = this.registeredEmailValidator.isRegisteredEmail(email);
-            if (!isRegisteredEmail) {
-                return HttpStatus.UNAUTHORIZED;
-            }
-            if (this.userRepository.findByEmail(email).get() != null) {
+            boolean isRegisteredUser = this.userRepository.findByEmail(email).get() != null;
+            if (isRegisteredEmail && isUserAuthorized && isRegisteredUser) {
                 User currentUser = this.userRepository.findByEmail(email).get();
                 boolean isValidPassword = this.userValidator.validatePasswordToUpdate(updateUserPasswordDto.getPassword());
                 if (isValidPassword) {
                     String newEncodedPassword = this.encoder.encode(updateUserPasswordDto.getPassword());
                     User updatedUser = this.createUpdatedUser(currentUser.getId(), currentUser.getName(), currentUser.getEmail(), newEncodedPassword, currentUser.getAuthorizationToken());
                     this.userRepository.save(updatedUser);
-                    return HttpStatus.ACCEPTED;
+                    return new ResponseEntity(HttpStatus.OK);
                 }
             }
+            return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
         } catch (Exception exception) {
             exception.printStackTrace();
+            return new ResponseEntity<>(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return HttpStatus.UNAUTHORIZED;
     }
 
     private User createUpdatedUser(Long id, String name, String email, String password, String authorizationToken) {
@@ -118,20 +107,21 @@ public class UserService {
         return updatedUser;
     }
 
-    public HttpStatus login(String email, String password) {
+    public ResponseEntity<UserResponseDto> login(String email, String password) {
         try {
             if(this.userRepository.findByEmail(email).get() != null) {
                 User credentials = this.userRepository.findByEmail(email).get();
                 if (this.userValidator.validateEncodedPassword(this.encoder, password, credentials.getPassword())) {
-                    return HttpStatus.ACCEPTED;
+                    return new ResponseEntity(HttpStatus.OK);
                 }
             }
+            return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
         } catch (NoSuchElementException exception) {
             exception.printStackTrace();
+            return new ResponseEntity<>(new ErrorMessageDto("Usuário não cadastrado"), HttpStatus.UNAUTHORIZED);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            return new ResponseEntity<>(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return HttpStatus.UNAUTHORIZED;
     }
 }
