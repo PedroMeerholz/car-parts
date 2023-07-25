@@ -1,10 +1,12 @@
 package io.github.pedromeerholz.stock.api.service.item;
 
 import io.github.pedromeerholz.stock.api.model.item.Item;
+import io.github.pedromeerholz.stock.api.model.item.dto.HistoryViewDto;
+import io.github.pedromeerholz.stock.api.model.item.dto.ItemViewDto;
 import io.github.pedromeerholz.stock.api.model.item.views.HistoryView;
 import io.github.pedromeerholz.stock.api.model.item.dto.NewItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
-import io.github.pedromeerholz.stock.api.model.item.itemCategory.ItemCategory;
+import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
 import io.github.pedromeerholz.stock.api.model.item.views.ItemsView;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ErrorMessageDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -145,11 +148,48 @@ public class ItemService {
         return item;
     }
 
-    public List<ItemsView> listAll() {
-        return this.itemsViewRepository.findAll();
+    public List<ItemViewDto> listAll() {
+        List<ItemsView> items = this.itemsViewRepository.findAll();
+        if (!items.isEmpty()) {
+            return this.convertItemsViewToDto(items);
+        }
+        return new ArrayList<>();
     }
 
-    public List<HistoryView> listHistory() {
-        return this.historyViewRepository.findAll();
+    private List<ItemViewDto> convertItemsViewToDto(List<ItemsView> items) {
+        List<ItemViewDto> itemViewDtos = new ArrayList<>();
+        for (ItemsView item : items) {
+            ItemViewDto itemViewDto = new ItemViewDto();
+            itemViewDto.setName(item.getName());
+            itemViewDto.setDescription(item.getDescription());
+            itemViewDto.setQuantity(item.getQuantity());
+            itemViewDto.setCategory(item.getCategory());
+            itemViewDto.setEnabled(item.isEnabled());
+            itemViewDtos.add(itemViewDto);
+        }
+        return itemViewDtos;
+    }
+
+    public List<HistoryViewDto> listHistory() {
+        List<HistoryView> historyView = this.historyViewRepository.findAll();
+        if (!historyView.isEmpty()) {
+            return this.convertHistoryViewToDto(historyView);
+        }
+        return new ArrayList<>();
+    }
+
+    private List<HistoryViewDto> convertHistoryViewToDto(List<HistoryView> historyView) {
+        List<HistoryViewDto> historyViewDtos = new ArrayList<>();
+        for (HistoryView history : historyView) {
+            HistoryViewDto historyViewDto = new HistoryViewDto();
+            historyViewDto.setName(history.getName());
+            historyViewDto.setDescription(history.getDescription());
+            historyViewDto.setQuantity(history.getQuantity());
+            historyViewDto.setCategory(history.getCategory());
+            historyViewDto.setDate(history.getDate());
+            historyViewDto.setEnabled(history.isEnabled());
+            historyViewDtos.add(historyViewDto);
+        }
+        return historyViewDtos;
     }
 }

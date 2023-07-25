@@ -1,4 +1,4 @@
-package io.github.pedromeerholz.stock.api.model.item.itemCategory;
+package io.github.pedromeerholz.stock.api.model.itemCategory;
 
 import jakarta.persistence.*;
 

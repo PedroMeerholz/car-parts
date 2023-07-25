@@ -1,13 +1,12 @@
 package io.github.pedromeerholz.stock.api.controller.item;
 
-import io.github.pedromeerholz.stock.api.model.item.views.HistoryView;
+import io.github.pedromeerholz.stock.api.model.item.dto.HistoryViewDto;
+import io.github.pedromeerholz.stock.api.model.item.dto.ItemViewDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.NewItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
-import io.github.pedromeerholz.stock.api.model.item.views.ItemsView;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.service.item.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,13 +41,13 @@ public class ItemController {
 
     @GetMapping("/listAll")
     @Operation(summary = "Visualize all registered items", method = "GET")
-    public List<ItemsView> listAll() {
+    public List<ItemViewDto> listAll() {
         return this.itemService.listAll();
     }
 
     @GetMapping("/listHistory")
     @Operation(summary = "View all update history of items information", method = "GET")
-    public List<HistoryView> listHistory() {
+    public List<HistoryViewDto> listHistory() {
         return this.itemService.listHistory();
     }
 }

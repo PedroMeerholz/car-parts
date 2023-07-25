@@ -1,11 +1,10 @@
 package io.github.pedromeerholz.stock.api.controller.item;
 
-import io.github.pedromeerholz.stock.api.model.item.itemCategory.ItemCategory;
-import io.github.pedromeerholz.stock.api.model.item.itemCategory.dto.ItemCategoryDto;
+import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
+import io.github.pedromeerholz.stock.api.model.itemCategory.dto.ItemCategoryDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.service.item.ItemCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +27,7 @@ public class ItemCategoryController {
 
     @GetMapping("/listAll")
     @Operation(summary = "Visualize all registered item cateogories", method = "GET")
-    public List<ItemCategory> listAll() {
+    public List<ItemCategoryDto> listAll() {
         return this.itemCategoryService.listAll();
     }
 

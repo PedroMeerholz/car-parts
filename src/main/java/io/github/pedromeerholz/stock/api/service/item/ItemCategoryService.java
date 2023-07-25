@@ -1,7 +1,7 @@
 package io.github.pedromeerholz.stock.api.service.item;
 
-import io.github.pedromeerholz.stock.api.model.item.itemCategory.ItemCategory;
-import io.github.pedromeerholz.stock.api.model.item.itemCategory.dto.ItemCategoryDto;
+import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
+import io.github.pedromeerholz.stock.api.model.itemCategory.dto.ItemCategoryDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ErrorMessageDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.repository.UserRepository;
@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,8 +48,19 @@ public class ItemCategoryService {
         }
     }
 
-    public List<ItemCategory> listAll() {
-        return this.itemCategoryRepository.findAll();
+    public List<ItemCategoryDto> listAll() {
+        List<ItemCategory> categories = this.itemCategoryRepository.findAll();
+        if (!categories.isEmpty()) {
+            List<ItemCategoryDto> categoryDtos = new ArrayList<>();
+            for (ItemCategory itemCategory : categories) {
+                ItemCategoryDto itemCategoryDto = new ItemCategoryDto();
+                itemCategoryDto.setCategory(itemCategory.getCategory());
+                itemCategoryDto.setEnabled(itemCategory.isEnabled());
+                categoryDtos.add(itemCategoryDto);
+            }
+            return categoryDtos;
+        }
+        return new ArrayList<>();
     }
 
     public ResponseEntity<ResponseDto> updateItemCategory(ItemCategoryDto itemCategoryDto, String categoryToUpdate, String email, String authorizationToken) {

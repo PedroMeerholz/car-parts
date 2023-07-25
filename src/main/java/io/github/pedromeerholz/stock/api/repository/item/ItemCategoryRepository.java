@@ -1,6 +1,6 @@
 package io.github.pedromeerholz.stock.api.repository.item;
 
-import io.github.pedromeerholz.stock.api.model.item.itemCategory.ItemCategory;
+import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,6 +1,6 @@
 package io.github.pedromeerholz.stock.validations.itemValidations;
 
-import io.github.pedromeerholz.stock.api.model.item.itemCategory.ItemCategory;
+import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
 import io.github.pedromeerholz.stock.api.repository.item.ItemCategoryRepository;
 import io.github.pedromeerholz.stock.validations.EmptyValueValidator;
 
