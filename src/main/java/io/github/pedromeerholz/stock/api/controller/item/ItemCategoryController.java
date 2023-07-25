@@ -2,9 +2,11 @@ package io.github.pedromeerholz.stock.api.controller.item;
 
 import io.github.pedromeerholz.stock.api.model.item.itemCategory.ItemCategory;
 import io.github.pedromeerholz.stock.api.model.item.itemCategory.dto.ItemCategoryDto;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.service.item.ItemCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class ItemCategoryController {
 
     @PostMapping("/create")
     @Operation(summary = "Create a new item category", method = "POST")
-    public HttpStatus createItemCategory(@RequestBody ItemCategoryDto itemCategoryDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+    public ResponseEntity<ResponseDto> createItemCategory(@RequestBody ItemCategoryDto itemCategoryDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
         return this.itemCategoryService.createItemCategory(itemCategoryDto, email, authorizationToken);
     }
 
@@ -32,7 +34,7 @@ public class ItemCategoryController {
 
     @PutMapping("/update")
     @Operation(summary = "Update a registered item category", method = "PUT")
-    public HttpStatus updateItemCategory(@RequestBody ItemCategoryDto itemCategoryDto, @RequestParam String categoryToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+    public ResponseEntity<ResponseDto> updateItemCategory(@RequestBody ItemCategoryDto itemCategoryDto, @RequestParam String categoryToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
         return this.itemCategoryService.updateItemCategory(itemCategoryDto, categoryToUpdate, email, authorizationToken);
     }
 }

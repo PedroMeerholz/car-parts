@@ -1,5 +1,8 @@
 package io.github.pedromeerholz.stock.api.service;
 
+import io.github.pedromeerholz.stock.api.model.responsesDtos.AuthorizationTokenDto;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.ErrorMessageDto;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.model.user.User;
 import io.github.pedromeerholz.stock.api.model.user.dto.*;
 import io.github.pedromeerholz.stock.api.repository.UserRepository;
@@ -34,7 +37,7 @@ public class UserService {
         this.authorizationTokenValidator = new AuthorizationTokenValidator();
     }
 
-    public ResponseEntity<UserResponseDto> createUser(NewUserDto newUserDto) {
+    public ResponseEntity<ResponseDto> createUser(NewUserDto newUserDto) {
         try {
             boolean isValidUserData = this.userValidator.validateUserDataToCreate(newUserDto.getName(),
                     newUserDto.getEmail(), newUserDto.getPassword());
@@ -57,7 +60,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<UserResponseDto> updateUser(String email, UpdateUserDto updateUserDto, String authorizationToken) {
+    public ResponseEntity<ResponseDto> updateUser(String email, UpdateUserDto updateUserDto, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             boolean isRegisteredEmail = this.registeredEmailValidator.isRegisteredEmail(email);
@@ -75,7 +78,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<UserResponseDto> updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto, String authorizationToken) {
+    public ResponseEntity<ResponseDto> updateUserPassword(String email, UpdateUserPasswordDto updateUserPasswordDto, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             boolean isRegisteredEmail = this.registeredEmailValidator.isRegisteredEmail(email);
@@ -107,7 +110,7 @@ public class UserService {
         return updatedUser;
     }
 
-    public ResponseEntity<UserResponseDto> login(String email, String password) {
+    public ResponseEntity<ResponseDto> login(String email, String password) {
         try {
             if(this.userRepository.findByEmail(email).get() != null) {
                 User credentials = this.userRepository.findByEmail(email).get();

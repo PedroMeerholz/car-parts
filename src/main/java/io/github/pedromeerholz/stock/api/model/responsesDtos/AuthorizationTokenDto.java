@@ -1,6 +1,6 @@
-package io.github.pedromeerholz.stock.api.model.user.dto;
+package io.github.pedromeerholz.stock.api.model.responsesDtos;
 
-public class AuthorizationTokenDto extends UserResponseDto {
+public class AuthorizationTokenDto extends ResponseDto {
     private String authorizationToken;
 
     public AuthorizationTokenDto(String authorizationToken) {

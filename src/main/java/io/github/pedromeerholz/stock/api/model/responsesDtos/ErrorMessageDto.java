@@ -1,6 +1,6 @@
-package io.github.pedromeerholz.stock.api.model.user.dto;
+package io.github.pedromeerholz.stock.api.model.responsesDtos;
 
-public class ErrorMessageDto extends UserResponseDto {
+public class ErrorMessageDto extends ResponseDto {
     private String errorMessage;
 
     public ErrorMessageDto(String errorMessage) {
