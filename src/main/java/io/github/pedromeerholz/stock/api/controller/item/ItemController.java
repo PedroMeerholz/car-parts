@@ -1,7 +1,6 @@
 package io.github.pedromeerholz.stock.api.controller.item;
 
 import io.github.pedromeerholz.stock.api.model.item.dto.HistoryViewDto;
-import io.github.pedromeerholz.stock.api.model.item.dto.ItemViewDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.ItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
@@ -41,7 +40,7 @@ public class ItemController {
 
     @GetMapping("/listAll")
     @Operation(summary = "Visualize all registered items", method = "GET")
-    public List<ItemViewDto> listAll() {
+    public List<ItemDto> listAll() {
         return this.itemService.listAll();
     }
 
@@ -49,6 +48,12 @@ public class ItemController {
     @Operation(summary = "Find a registered item by name", method = "GET")
     public ItemDto listItem(@RequestParam String itemName) {
         return this.itemService.listItem(itemName);
+    }
+
+    @GetMapping("/listByStatus")
+    @Operation(summary = "Visualize all registred items filtered by enabled field")
+    public List<ItemDto> listItemByStatus(@RequestParam boolean status) {
+        return this.itemService.listItemByStatus(status);
     }
 
     @GetMapping("/listHistory")

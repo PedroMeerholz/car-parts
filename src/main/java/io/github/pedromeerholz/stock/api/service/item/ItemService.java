@@ -2,7 +2,6 @@ package io.github.pedromeerholz.stock.api.service.item;
 
 import io.github.pedromeerholz.stock.api.model.item.Item;
 import io.github.pedromeerholz.stock.api.model.item.dto.HistoryViewDto;
-import io.github.pedromeerholz.stock.api.model.item.dto.ItemViewDto;
 import io.github.pedromeerholz.stock.api.model.item.views.HistoryView;
 import io.github.pedromeerholz.stock.api.model.item.dto.ItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
@@ -148,7 +147,7 @@ public class ItemService {
         return item;
     }
 
-    public List<ItemViewDto> listAll() {
+    public List<ItemDto> listAll() {
         List<ItemsView> items = this.itemsViewRepository.findAll();
         if (!items.isEmpty()) {
             return this.convertItemsViewToDto(items);
@@ -156,18 +155,18 @@ public class ItemService {
         return new ArrayList<>();
     }
 
-    private List<ItemViewDto> convertItemsViewToDto(List<ItemsView> items) {
-        List<ItemViewDto> itemViewDtos = new ArrayList<>();
+    private List<ItemDto> convertItemsViewToDto(List<ItemsView> items) {
+        List<ItemDto> itemDtos = new ArrayList<>();
         for (ItemsView item : items) {
-            ItemViewDto itemViewDto = new ItemViewDto();
-            itemViewDto.setName(item.getName());
-            itemViewDto.setDescription(item.getDescription());
-            itemViewDto.setQuantity(item.getQuantity());
-            itemViewDto.setCategory(item.getCategory());
-            itemViewDto.setEnabled(item.isEnabled());
-            itemViewDtos.add(itemViewDto);
+            ItemDto itemDto = new ItemDto();
+            itemDto.setName(item.getName());
+            itemDto.setDescription(item.getDescription());
+            itemDto.setQuantity(item.getQuantity());
+            itemDto.setCategory(item.getCategory());
+            itemDto.setEnabled(item.isEnabled());
+            itemDtos.add(itemDto);
         }
-        return itemViewDtos;
+        return itemDtos;
     }
 
     public ItemDto listItem(String itemName) {
@@ -177,6 +176,23 @@ public class ItemService {
             return this.convertItemsViewToItemDto(itemView);
         }
         return new ItemDto();
+    }
+
+    public List<ItemDto> listItemByStatus(boolean status) {
+        Optional<List<ItemsView>> itemsView = this.itemsViewRepository.findByStatus(status);
+        if (itemsView.isPresent()) {
+            return this.convertItemsViewListToItemDtoList(itemsView.get());
+        }
+        return new ArrayList<>();
+    }
+
+    private List<ItemDto> convertItemsViewListToItemDtoList(List<ItemsView> itemView) {
+        List<ItemDto> itemDtos = new ArrayList<>();
+        for (ItemsView view : itemView) {
+            ItemDto itemDto = this.convertItemsViewToItemDto(view);
+            itemDtos.add(itemDto);
+        }
+        return itemDtos;
     }
 
     private ItemDto convertItemsViewToItemDto(ItemsView itemView) {
