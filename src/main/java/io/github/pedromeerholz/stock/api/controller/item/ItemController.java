@@ -4,9 +4,11 @@ import io.github.pedromeerholz.stock.api.model.item.views.HistoryView;
 import io.github.pedromeerholz.stock.api.model.item.dto.NewItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
 import io.github.pedromeerholz.stock.api.model.item.views.ItemsView;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.service.item.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,20 +24,19 @@ public class ItemController {
 
     @PostMapping("/create")
     @Operation(summary = "Register a new item", method = "POST")
-    public HttpStatus createItem(@RequestBody NewItemDto newItemDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+    public ResponseEntity<ResponseDto> createItem(@RequestBody NewItemDto newItemDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
         return this.itemService.createItem(newItemDto, email, authorizationToken);
     }
 
     @PatchMapping("/updateInfo")
     @Operation(summary = "Update the fields name, description, category and enabled from a registered item", method = "PATCH")
-    public HttpStatus updateItemInfo(@RequestBody UpdateItemDto updateItemDto, @RequestParam String itemToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationtoken) {
+    public ResponseEntity<ResponseDto> updateItemInfo(@RequestBody UpdateItemDto updateItemDto, @RequestParam String itemToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationtoken) {
         return this.itemService.updateItemInfo(updateItemDto, itemToUpdate, email, authorizationtoken);
     }
 
     @PatchMapping("/updateQuantity")
     @Operation(summary = "Increase or decrease the available amount of registered item", method = "PATCH")
-    public HttpStatus updateItemQuantity(@RequestParam String itemToUpdate, @RequestParam int quantityToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationtoken) {
-        System.out.printf("Quantity controller: %d\n", quantityToUpdate);
+    public ResponseEntity<ResponseDto> updateItemQuantity(@RequestParam String itemToUpdate, @RequestParam int quantityToUpdate, @RequestParam String email, @RequestHeader("Authorization") String authorizationtoken) {
         return this.itemService.updateItemQuantity(itemToUpdate, quantityToUpdate, email, authorizationtoken);
     }
 

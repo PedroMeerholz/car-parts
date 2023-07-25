@@ -6,6 +6,8 @@ import io.github.pedromeerholz.stock.api.model.item.dto.NewItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
 import io.github.pedromeerholz.stock.api.model.item.itemCategory.ItemCategory;
 import io.github.pedromeerholz.stock.api.model.item.views.ItemsView;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.ErrorMessageDto;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.repository.UserRepository;
 import io.github.pedromeerholz.stock.api.repository.item.ItemCategoryRepository;
 import io.github.pedromeerholz.stock.api.repository.item.ItemRepository;
@@ -14,6 +16,7 @@ import io.github.pedromeerholz.stock.api.repository.item.views.ItemsViewReposito
 import io.github.pedromeerholz.stock.validations.AuthorizationTokenValidator;
 import io.github.pedromeerholz.stock.validations.itemValidations.ItemValidator;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +32,7 @@ public class ItemService {
     private final UserRepository userRepository;
     private final AuthorizationTokenValidator authorizationTokenValidator;
 
-    public ItemService(ItemRepository itemRepository, ItemCategoryRepository itemCategoryRepository,
-                       HistoryViewRepository historyViewRepository, ItemsViewRepository itemsViewRepository, UserRepository userRepository) {
+    public ItemService(ItemRepository itemRepository, ItemCategoryRepository itemCategoryRepository, HistoryViewRepository historyViewRepository, ItemsViewRepository itemsViewRepository, UserRepository userRepository) {
         this.itemRepository = itemRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.historyViewRepository = historyViewRepository;
@@ -39,26 +41,26 @@ public class ItemService {
         this.authorizationTokenValidator = new AuthorizationTokenValidator();
     }
 
-    public HttpStatus createItem(NewItemDto newItemDto, String email, String authorizationToken) {
+    public ResponseEntity<ResponseDto> createItem(NewItemDto newItemDto, String email, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
-            if (isUserAuthorized == false) {
-                return HttpStatus.UNAUTHORIZED;
+            if (!isUserAuthorized) {
+                return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
             }
             if (!this.itemValidator.validateItemDataForCreate(this.itemCategoryRepository, newItemDto)) {
-                return HttpStatus.NOT_ACCEPTABLE;
+                return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
             }
             Long categoryId = this.getCategoryId(newItemDto.getCategory());
             if (categoryId != null) {
                 Item newItem = this.generateItemToCreate(newItemDto.getName(), newItemDto.getDescription(), newItemDto.getQuantity(), categoryId, newItemDto.isEnabled());
                 this.itemRepository.save(newItem);
-                return HttpStatus.OK;
+                return new ResponseEntity(HttpStatus.OK);
             }
+            return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return HttpStatus.NOT_ACCEPTABLE;
     }
 
     private Item generateItemToCreate(String name, String description, int quantity, Long categoryId, boolean enabled) {
@@ -80,28 +82,28 @@ public class ItemService {
         return null;
     }
 
-    public HttpStatus updateItemInfo(UpdateItemDto updateItemDto, String itemToUpdate, String email, String authorizationToken) {
+    public ResponseEntity<ResponseDto> updateItemInfo(UpdateItemDto updateItemDto, String itemToUpdate, String email, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             if (isUserAuthorized == false) {
-                return HttpStatus.UNAUTHORIZED;
+                return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
             }
             Long updatedCategoryId = this.getCategoryId(updateItemDto.getCategory());
             if (!this.itemValidator.validateItemDataForUpdate(this.itemCategoryRepository, updateItemDto) || updatedCategoryId == null) {
-                return HttpStatus.NOT_ACCEPTABLE;
+                return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
             }
             Optional<Item> optionalCurrentItem = this.itemRepository.findByName(itemToUpdate);
             if (optionalCurrentItem.isPresent()) {
                 Item currentItem = optionalCurrentItem.get();
                 Item updatedItem = this.generateItemToUpdateInfo(currentItem, updateItemDto.getName(), updateItemDto.getDescription(), updatedCategoryId, updateItemDto.isEnabled());
                 this.itemRepository.save(updatedItem);
-                return HttpStatus.OK;
+                return new ResponseEntity(HttpStatus.OK);
             }
+            return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return HttpStatus.NOT_MODIFIED;
     }
 
     private Item generateItemToUpdateInfo(Item currentItem, String name, String description, Long categoryId, boolean enabled) {
@@ -113,24 +115,24 @@ public class ItemService {
         return item;
     }
 
-    public HttpStatus updateItemQuantity(String itemToUpdate, int quantityToUpdate, String email, String authorizationToken) {
+    public ResponseEntity<ResponseDto> updateItemQuantity(String itemToUpdate, int quantityToUpdate, String email, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             if (isUserAuthorized == false) {
-                return HttpStatus.UNAUTHORIZED;
+                return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
             }
             Optional<Item> optionalCurrentItem = this.itemRepository.findByName(itemToUpdate);
             if (optionalCurrentItem.isPresent()) {
                 Item currentItem = optionalCurrentItem.get();
                 Item updatedItem = this.generateItemToUpdateQuantity(currentItem, quantityToUpdate);
                 this.itemRepository.save(updatedItem);
-                return HttpStatus.OK;
+                return new ResponseEntity(HttpStatus.OK);
             }
+            return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return HttpStatus.NOT_MODIFIED;
     }
 
     private Item generateItemToUpdateQuantity(Item currentItem, int quantity) {
