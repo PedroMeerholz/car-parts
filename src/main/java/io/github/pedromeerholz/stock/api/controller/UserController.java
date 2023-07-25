@@ -1,5 +1,6 @@
 package io.github.pedromeerholz.stock.api.controller;
 
+import io.github.pedromeerholz.stock.api.model.user.dto.AuthorizationTokenDto;
 import io.github.pedromeerholz.stock.api.model.user.dto.NewUserDto;
 import io.github.pedromeerholz.stock.api.model.user.dto.UpdateUserDto;
 import io.github.pedromeerholz.stock.api.model.user.dto.UpdateUserPasswordDto;
@@ -19,7 +20,7 @@ public class UserController {
 
     @PostMapping("/create")
     @Operation(summary = "Register new users", method = "POST")
-    public HttpStatus createUser(@RequestBody NewUserDto newUserDto) {
+    public AuthorizationTokenDto createUser(@RequestBody NewUserDto newUserDto) {
         return this.userService.createUser(newUserDto);
     }
 

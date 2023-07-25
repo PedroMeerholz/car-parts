@@ -1,6 +1,7 @@
 package io.github.pedromeerholz.stock.api.service;
 
 import io.github.pedromeerholz.stock.api.model.user.User;
+import io.github.pedromeerholz.stock.api.model.user.dto.AuthorizationTokenDto;
 import io.github.pedromeerholz.stock.api.model.user.dto.NewUserDto;
 import io.github.pedromeerholz.stock.api.model.user.dto.UpdateUserDto;
 import io.github.pedromeerholz.stock.api.model.user.dto.UpdateUserPasswordDto;
@@ -35,7 +36,7 @@ public class UserService {
         this.authorizationTokenValidator = new AuthorizationTokenValidator();
     }
 
-    public HttpStatus createUser(NewUserDto newUserDto) {
+    public AuthorizationTokenDto createUser(NewUserDto newUserDto) {
         try {
             boolean isValidUserData = this.userValidator.validateUserDataToCreate(newUserDto.getName(),
                     newUserDto.getEmail(), newUserDto.getPassword());
@@ -49,12 +50,13 @@ public class UserService {
                         newUserDto.getName(), newUserDto.getEmail());
                 user.setAuthorizationToken(authorizationToken);
                 this.userRepository.save(user);
-                return HttpStatus.ACCEPTED;
+                return new AuthorizationTokenDto(authorizationToken);
             }
         } catch (Exception exception) {
             exception.printStackTrace();
+            return new AuthorizationTokenDto(null);
         }
-        return HttpStatus.UNAUTHORIZED;
+        return new AuthorizationTokenDto(null);
     }
 
     public HttpStatus updateUser(String email, UpdateUserDto updateUserDto, String authorizationToken) {
