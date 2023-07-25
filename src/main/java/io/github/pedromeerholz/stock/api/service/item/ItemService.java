@@ -4,7 +4,7 @@ import io.github.pedromeerholz.stock.api.model.item.Item;
 import io.github.pedromeerholz.stock.api.model.item.dto.HistoryViewDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.ItemViewDto;
 import io.github.pedromeerholz.stock.api.model.item.views.HistoryView;
-import io.github.pedromeerholz.stock.api.model.item.dto.NewItemDto;
+import io.github.pedromeerholz.stock.api.model.item.dto.ItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
 import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
 import io.github.pedromeerholz.stock.api.model.item.views.ItemsView;
@@ -44,18 +44,18 @@ public class ItemService {
         this.authorizationTokenValidator = new AuthorizationTokenValidator();
     }
 
-    public ResponseEntity<ResponseDto> createItem(NewItemDto newItemDto, String email, String authorizationToken) {
+    public ResponseEntity<ResponseDto> createItem(ItemDto itemDto, String email, String authorizationToken) {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             if (!isUserAuthorized) {
                 return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
             }
-            if (!this.itemValidator.validateItemDataForCreate(this.itemCategoryRepository, newItemDto)) {
+            if (!this.itemValidator.validateItemDataForCreate(this.itemCategoryRepository, itemDto)) {
                 return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
             }
-            Long categoryId = this.getCategoryId(newItemDto.getCategory());
+            Long categoryId = this.getCategoryId(itemDto.getCategory());
             if (categoryId != null) {
-                Item newItem = this.generateItemToCreate(newItemDto.getName(), newItemDto.getDescription(), newItemDto.getQuantity(), categoryId, newItemDto.isEnabled());
+                Item newItem = this.generateItemToCreate(itemDto.getName(), itemDto.getDescription(), itemDto.getQuantity(), categoryId, itemDto.isEnabled());
                 this.itemRepository.save(newItem);
                 return new ResponseEntity(HttpStatus.OK);
             }
@@ -168,6 +168,25 @@ public class ItemService {
             itemViewDtos.add(itemViewDto);
         }
         return itemViewDtos;
+    }
+
+    public ItemDto listItem(String itemName) {
+        Optional<ItemsView> item = this.itemsViewRepository.findByName(itemName);
+        if (item.isPresent()) {
+            ItemsView itemView = item.get();
+            return this.convertItemsViewToItemDto(itemView);
+        }
+        return new ItemDto();
+    }
+
+    private ItemDto convertItemsViewToItemDto(ItemsView itemView) {
+        ItemDto itemDto = new ItemDto();
+        itemDto.setName(itemView.getName());
+        itemDto.setDescription(itemView.getDescription());
+        itemDto.setQuantity(itemView.getQuantity());
+        itemDto.setCategory(itemView.getCategory());
+        itemDto.setEnabled(itemView.isEnabled());
+        return itemDto;
     }
 
     public List<HistoryViewDto> listHistory() {

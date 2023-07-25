@@ -2,7 +2,7 @@ package io.github.pedromeerholz.stock.api.controller.item;
 
 import io.github.pedromeerholz.stock.api.model.item.dto.HistoryViewDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.ItemViewDto;
-import io.github.pedromeerholz.stock.api.model.item.dto.NewItemDto;
+import io.github.pedromeerholz.stock.api.model.item.dto.ItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.service.item.ItemService;
@@ -23,8 +23,8 @@ public class ItemController {
 
     @PostMapping("/create")
     @Operation(summary = "Register a new item", method = "POST")
-    public ResponseEntity<ResponseDto> createItem(@RequestBody NewItemDto newItemDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
-        return this.itemService.createItem(newItemDto, email, authorizationToken);
+    public ResponseEntity<ResponseDto> createItem(@RequestBody ItemDto itemDto, @RequestParam String email, @RequestHeader("Authorization") String authorizationToken) {
+        return this.itemService.createItem(itemDto, email, authorizationToken);
     }
 
     @PatchMapping("/updateInfo")
@@ -43,6 +43,12 @@ public class ItemController {
     @Operation(summary = "Visualize all registered items", method = "GET")
     public List<ItemViewDto> listAll() {
         return this.itemService.listAll();
+    }
+
+    @GetMapping("/listItem")
+    @Operation(summary = "Find a registered item by name", method = "GET")
+    public ItemDto listItem(@RequestParam String itemName) {
+        return this.itemService.listItem(itemName);
     }
 
     @GetMapping("/listHistory")

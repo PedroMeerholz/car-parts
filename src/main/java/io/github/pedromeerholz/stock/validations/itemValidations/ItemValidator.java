@@ -1,6 +1,6 @@
 package io.github.pedromeerholz.stock.validations.itemValidations;
 
-import io.github.pedromeerholz.stock.api.model.item.dto.NewItemDto;
+import io.github.pedromeerholz.stock.api.model.item.dto.ItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
 import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
 import io.github.pedromeerholz.stock.api.repository.item.ItemCategoryRepository;
@@ -11,11 +11,11 @@ import java.util.Optional;
 public class ItemValidator {
     private final EmptyValueValidator emptyValueValidator = new EmptyValueValidator();
 
-    public boolean validateItemDataForCreate(ItemCategoryRepository itemCategoryRepository, NewItemDto newItemDto) {
-        boolean isNameEmpty = this.emptyValueValidator.emptyValueValidation(newItemDto.getName());
-        boolean isDescriptionEmpty = this.emptyValueValidator.emptyValueValidation(newItemDto.getDescription());
-        boolean categoryExists = this.verifyCategoryExists(itemCategoryRepository, newItemDto.getCategory());
-        boolean isValidQuantity = this.validateQuantity(newItemDto.getQuantity());
+    public boolean validateItemDataForCreate(ItemCategoryRepository itemCategoryRepository, ItemDto itemDto) {
+        boolean isNameEmpty = this.emptyValueValidator.emptyValueValidation(itemDto.getName());
+        boolean isDescriptionEmpty = this.emptyValueValidator.emptyValueValidation(itemDto.getDescription());
+        boolean categoryExists = this.verifyCategoryExists(itemCategoryRepository, itemDto.getCategory());
+        boolean isValidQuantity = this.validateQuantity(itemDto.getQuantity());
         if (!isNameEmpty || !isDescriptionEmpty || !categoryExists || !isValidQuantity) {
             return false;
         }
