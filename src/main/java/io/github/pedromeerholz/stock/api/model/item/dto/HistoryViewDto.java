@@ -1,6 +1,8 @@
 package io.github.pedromeerholz.stock.api.model.item.dto;
 
-public class HistoryViewDto {
+import java.io.Serializable;
+
+public class HistoryViewDto implements Serializable {
     private String name;
     private String description;
     private int quantity;

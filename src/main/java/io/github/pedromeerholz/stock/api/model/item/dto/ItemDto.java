@@ -1,6 +1,8 @@
 package io.github.pedromeerholz.stock.api.model.item.dto;
 
-public class ItemDto {
+import java.io.Serializable;
+
+public class ItemDto implements Serializable {
     private String name;
     private String description;
     private int quantity;

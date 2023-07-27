@@ -14,6 +14,7 @@ import io.github.pedromeerholz.stock.api.repository.item.ItemCategoryRepository;
 import io.github.pedromeerholz.stock.api.repository.item.ItemRepository;
 import io.github.pedromeerholz.stock.api.repository.item.views.HistoryViewRepository;
 import io.github.pedromeerholz.stock.api.repository.item.views.ItemsViewRepository;
+import io.github.pedromeerholz.stock.redis.RedisValueCache;
 import io.github.pedromeerholz.stock.validations.AuthorizationTokenValidator;
 import io.github.pedromeerholz.stock.validations.itemValidations.ItemValidator;
 import org.springframework.http.HttpStatus;
@@ -30,17 +31,20 @@ public class ItemService {
     private final ItemCategoryRepository itemCategoryRepository;
     private final HistoryViewRepository historyViewRepository;
     private final ItemsViewRepository itemsViewRepository;
-    private final ItemValidator itemValidator = new ItemValidator();
+    private final ItemValidator itemValidator;
+    private final RedisValueCache redisValueCache;
     private final UserRepository userRepository;
     private final AuthorizationTokenValidator authorizationTokenValidator;
 
-    public ItemService(ItemRepository itemRepository, ItemCategoryRepository itemCategoryRepository, HistoryViewRepository historyViewRepository, ItemsViewRepository itemsViewRepository, UserRepository userRepository) {
+    public ItemService(ItemRepository itemRepository, ItemCategoryRepository itemCategoryRepository, HistoryViewRepository historyViewRepository, ItemsViewRepository itemsViewRepository, RedisValueCache redisValueCache, UserRepository userRepository) {
         this.itemRepository = itemRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.historyViewRepository = historyViewRepository;
         this.itemsViewRepository = itemsViewRepository;
+        this.redisValueCache = redisValueCache;
         this.userRepository = userRepository;
         this.authorizationTokenValidator = new AuthorizationTokenValidator();
+        this.itemValidator = new ItemValidator();
     }
 
     public ResponseEntity<ResponseDto> createItem(ItemDto itemDto, String email, String authorizationToken) {
@@ -56,6 +60,7 @@ public class ItemService {
             if (categoryId != null) {
                 Item newItem = this.generateItemToCreate(itemDto.getName(), itemDto.getDescription(), itemDto.getQuantity(), categoryId, itemDto.isEnabled());
                 this.itemRepository.save(newItem);
+                this.redisValueCache.clearAllCachedValues();
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
@@ -99,6 +104,7 @@ public class ItemService {
                 Item currentItem = optionalCurrentItem.get();
                 Item updatedItem = this.generateItemToUpdateInfo(currentItem, updateItemDto.getName(), updateItemDto.getDescription(), updatedCategoryId, updateItemDto.isEnabled());
                 this.itemRepository.save(updatedItem);
+                this.redisValueCache.clearAllCachedValues();
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
@@ -128,6 +134,7 @@ public class ItemService {
                 Item currentItem = optionalCurrentItem.get();
                 Item updatedItem = this.generateItemToUpdateQuantity(currentItem, quantityToUpdate);
                 this.itemRepository.save(updatedItem);
+                this.redisValueCache.clearAllCachedValues();
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
@@ -139,18 +146,29 @@ public class ItemService {
 
     private Item generateItemToUpdateQuantity(Item currentItem, int quantity) {
         Item item = currentItem;
-        System.out.printf("Quantity: %d\n", quantity);
-        System.out.println(item.getQuantity());
         int updatedQuantity = item.getQuantity() + quantity;
         item.setQuantity(updatedQuantity);
-        System.out.println(item.getQuantity());
         return item;
     }
 
     public List<ItemDto> listAll() {
+        List<ItemDto> cachedValues = this.getItemListFromCache();
+        if (cachedValues != null) {
+            return cachedValues;
+        }
+        return this.getItemListFromDatabase();
+    }
+
+    private List<ItemDto> getItemListFromCache() {
+        return (List<ItemDto>) this.redisValueCache.getCachedValue(this.redisValueCache.ALL_ITEMS_KEY);
+    }
+
+    private List<ItemDto> getItemListFromDatabase() {
         List<ItemsView> items = this.itemsViewRepository.findAll();
         if (!items.isEmpty()) {
-            return this.convertItemsViewToDto(items);
+            List<ItemDto> itemDtos = this.convertItemsViewToDto(items);
+            this.redisValueCache.saveInCache(this.redisValueCache.ALL_ITEMS_KEY, itemDtos);
+            return itemDtos;
         }
         return new ArrayList<>();
     }
@@ -179,9 +197,30 @@ public class ItemService {
     }
 
     public List<ItemDto> listItemByStatus(boolean status) {
+        List<ItemDto> cachedValues = this.getItemsByStatusFromCache(status);
+        if (cachedValues != null) {
+            return cachedValues;
+        }
+        return this.getItemsByStatusFromDatabase(status);
+    }
+
+    private List<ItemDto> getItemsByStatusFromCache(boolean status) {
+        if (status) {
+            return (List<ItemDto>) this.redisValueCache.getCachedValue(this.redisValueCache.ENABLED_ITEMS_KEY);
+        }
+        return (List<ItemDto>) this.redisValueCache.getCachedValue(this.redisValueCache.DISABLED_ITEMS_KEY);
+    }
+
+    private List<ItemDto> getItemsByStatusFromDatabase(boolean status) {
         Optional<List<ItemsView>> itemsView = this.itemsViewRepository.findByStatus(status);
         if (itemsView.isPresent()) {
-            return this.convertItemsViewListToItemDtoList(itemsView.get());
+            List<ItemDto> itemDtos = this.convertItemsViewListToItemDtoList(itemsView.get());
+            if (status) {
+                this.redisValueCache.saveInCache(this.redisValueCache.ENABLED_ITEMS_KEY, itemDtos);
+            } else {
+                this.redisValueCache.saveInCache(this.redisValueCache.DISABLED_ITEMS_KEY, itemDtos);
+            }
+            return itemDtos;
         }
         return new ArrayList<>();
     }
@@ -206,13 +245,26 @@ public class ItemService {
     }
 
     public List<HistoryViewDto> listHistory() {
+        List<HistoryViewDto> cachedValues = this.getAllHistoryFromCache();
+        if (cachedValues != null) {
+            return cachedValues;
+        }
+        return this.getAllHistoryFromDatabase();
+    }
+
+    private List<HistoryViewDto> getAllHistoryFromCache() {
+        return (List<HistoryViewDto>) this.redisValueCache.getCachedValue(this.redisValueCache.ALL_HISTORY_KEY);
+    }
+
+    private List<HistoryViewDto> getAllHistoryFromDatabase() {
         List<HistoryView> historyView = this.historyViewRepository.findAll();
         if (!historyView.isEmpty()) {
-            return this.convertHistoryViewToDtos(historyView);
+            List<HistoryViewDto> historyViewDtos = this.convertHistoryViewToDtos(historyView);
+            this.redisValueCache.saveInCache(this.redisValueCache.ALL_HISTORY_KEY, historyViewDtos);
+            return historyViewDtos;
         }
         return new ArrayList<>();
     }
-
 
     public List<HistoryViewDto> listItemHistory(String itemName) {
         Optional<List<HistoryView>> historyView = this.historyViewRepository.findByName(itemName);
