@@ -29,7 +29,7 @@ mvn spring-boot:run
 ### Maneira 2 - Com Docker
 1. Faça o pull das imagens necessárias em seu computador
 ```bash
-docker pull pedromeerholz/stock-api:2.1.1
+docker pull pedromeerholz/stock-api:2.2
 docker pull pedromeerholz/stock-api-db:1.0
 docker pull redis:7
 ```
