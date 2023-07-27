@@ -8,6 +8,8 @@ RUN apt install openjdk-17-jdk -y
 
 RUN apt install maven -y
 
+RUN apt install iputils-ping -y
+
 COPY /src /home/stock-api/src
 
 COPY ./pom.xml /home/stock-api

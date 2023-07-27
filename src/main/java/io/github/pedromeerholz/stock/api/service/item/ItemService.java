@@ -154,6 +154,7 @@ public class ItemService {
     public List<ItemDto> listAll() {
         List<ItemDto> cachedValues = this.getItemListFromCache();
         if (cachedValues != null) {
+            System.out.println("From cache");
             return cachedValues;
         }
         return this.getItemListFromDatabase();
@@ -199,6 +200,7 @@ public class ItemService {
     public List<ItemDto> listItemByStatus(boolean status) {
         List<ItemDto> cachedValues = this.getItemsByStatusFromCache(status);
         if (cachedValues != null) {
+            System.out.println("From cache");
             return cachedValues;
         }
         return this.getItemsByStatusFromDatabase(status);
@@ -247,6 +249,7 @@ public class ItemService {
     public List<HistoryViewDto> listHistory() {
         List<HistoryViewDto> cachedValues = this.getAllHistoryFromCache();
         if (cachedValues != null) {
+            System.out.println("From cache");
             return cachedValues;
         }
         return this.getAllHistoryFromDatabase();
