@@ -47,7 +47,7 @@ ou caso queira que os containers sejam excluídos após serem finalizados, execu
 ```bash
 docker run -it --rm --name stock-api-db -p 3306:3306 --network stock-api-network pedromeerholz/stock-api-db:1.0
 docker run -d --rm --name redis-db -p 6379:6379 --network stock-api-network redis:7
-docker run -it --rm --name stock-api -p 8080:8080 --network stock-api-network pedromeerholz/stock-api:2.1.1
+docker run -it --rm --name stock-api -p 8080:8080 --network stock-api-network pedromeerholz/stock-api:2.2
 ```
 4. Para acessar a documentação da API, acesse em seu navegador:
 ```bash
