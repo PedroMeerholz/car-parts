@@ -60,7 +60,8 @@ Disponibilizei no diretório postman_requests um arquivo .json com toda a coleç
 1. Crie um usuário
 2. Faça o login e copie o token de acesso
 3. Crie uma categoria de item. Sem ela você não poderá cadastrar nenhum item.
+4. Agora você já pode cadastrar, editar e listar itens.
 
 #### Observações
 * Antes de fazer a requisição, verifique se ela necessita do token e do email do usuário. Caso preciso, altere ambos para poder ter acesso aos endpoints.
-* Se tiver dúvidas sobre a estrutura das requests, acesse a documentação
+* Se tiver dúvidas sobre a estrutura das requests, acesse a documentação (http://localhost:8080/swagger-ui/index.html#/)
