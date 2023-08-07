@@ -39,4 +39,10 @@ public class UserController {
     public ResponseEntity<ResponseDto> login(@RequestParam String email, @RequestHeader("Authorization") String password) {
         return this.userService.login(email, password);
     }
+
+    @PutMapping("/logout")
+    @Operation(summary = "User Logout", method = "PUT")
+    public ResponseEntity<ResponseDto> logout(@RequestParam String email, @RequestHeader("Authorization") String password) {
+        return this.userService.logout(email, password);
+    }
 }

@@ -1,7 +1,7 @@
 package io.github.pedromeerholz.stock.api.service;
 
 import io.github.pedromeerholz.stock.api.model.responsesDtos.AuthorizationTokenDto;
-import io.github.pedromeerholz.stock.api.model.responsesDtos.ErrorMessageDto;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.MessageDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.model.user.User;
 import io.github.pedromeerholz.stock.api.model.user.dto.*;
@@ -47,16 +47,13 @@ public class UserService {
                 user.setEmail(newUserDto.getEmail());
                 String encodedPassword = this.encoder.encode(newUserDto.getPassword());
                 user.setPassword(encodedPassword);
-                String authorizationToken = this.authorizationTokenGenerator.generateAuthorizationToken(
-                        newUserDto.getName(), newUserDto.getEmail());
-                user.setAuthorizationToken(authorizationToken);
                 this.userRepository.save(user);
-                return new ResponseEntity(new AuthorizationTokenDto(authorizationToken), HttpStatus.OK);
+                return new ResponseEntity(HttpStatus.CREATED);
             }
-            return new ResponseEntity(new ErrorMessageDto("Os dados informados não são válidos"), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity(new MessageDto("Os dados informados não são válidos"), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new MessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -71,10 +68,10 @@ public class UserService {
                 this.userRepository.save(updatedUser);
                 return new ResponseEntity(HttpStatus.OK);
             }
-            return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(new MessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new MessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -93,10 +90,10 @@ public class UserService {
                     return new ResponseEntity(HttpStatus.OK);
                 }
             }
-            return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(new MessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity<>(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new MessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -113,18 +110,38 @@ public class UserService {
     public ResponseEntity<ResponseDto> login(String email, String password) {
         try {
             if(this.userRepository.findByEmail(email).get() != null) {
-                User credentials = this.userRepository.findByEmail(email).get();
-                if (this.userValidator.validateEncodedPassword(this.encoder, password, credentials.getPassword())) {
-                    return new ResponseEntity(HttpStatus.OK);
+                User user = this.userRepository.findByEmail(email).get();
+                if (this.userValidator.validateEncodedPassword(this.encoder, password, user.getPassword())) {
+                    String authorizationToken = this.authorizationTokenGenerator.generateAuthorizationToken(user.getName(), email);
+                    user.setAuthorizationToken(authorizationToken);
+                    this.userRepository.save(user);
+                    return new ResponseEntity(new AuthorizationTokenDto(authorizationToken), HttpStatus.OK);
                 }
             }
-            return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(new MessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
         } catch (NoSuchElementException exception) {
             exception.printStackTrace();
-            return new ResponseEntity<>(new ErrorMessageDto("Usuário não cadastrado"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new MessageDto("Usuário não cadastrado"), HttpStatus.UNAUTHORIZED);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity<>(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new MessageDto(exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<ResponseDto> logout(String email, String password) {
+        try {
+            if(this.userRepository.findByEmail(email).get() != null) {
+                User user = this.userRepository.findByEmail(email).get();
+                if (this.userValidator.validateEncodedPassword(this.encoder, password, user.getPassword())) {
+                    user.setAuthorizationToken(null);
+                    this.userRepository.save(user);
+                    return new ResponseEntity(new MessageDto("Logout realizado com sucesso"), HttpStatus.OK);
+                }
+            }
+            return new ResponseEntity(new MessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity<>(new MessageDto(exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

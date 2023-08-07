@@ -7,7 +7,7 @@ import io.github.pedromeerholz.stock.api.model.item.dto.ItemDto;
 import io.github.pedromeerholz.stock.api.model.item.dto.UpdateItemDto;
 import io.github.pedromeerholz.stock.api.model.itemCategory.ItemCategory;
 import io.github.pedromeerholz.stock.api.model.item.views.ItemsView;
-import io.github.pedromeerholz.stock.api.model.responsesDtos.ErrorMessageDto;
+import io.github.pedromeerholz.stock.api.model.responsesDtos.MessageDto;
 import io.github.pedromeerholz.stock.api.model.responsesDtos.ResponseDto;
 import io.github.pedromeerholz.stock.api.repository.UserRepository;
 import io.github.pedromeerholz.stock.api.repository.item.ItemCategoryRepository;
@@ -51,10 +51,10 @@ public class ItemService {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             if (!isUserAuthorized) {
-                return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity(new MessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
             }
             if (!this.itemValidator.validateItemDataForCreate(this.itemCategoryRepository, itemDto)) {
-                return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
+                return new ResponseEntity(new MessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
             }
             Long categoryId = this.getCategoryId(itemDto.getCategory());
             if (categoryId != null) {
@@ -63,10 +63,10 @@ public class ItemService {
                 this.redisValueCache.clearAllCachedValues();
                 return new ResponseEntity(HttpStatus.OK);
             }
-            return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity(new MessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new MessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -93,11 +93,11 @@ public class ItemService {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             if (isUserAuthorized == false) {
-                return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity(new MessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
             }
             Long updatedCategoryId = this.getCategoryId(updateItemDto.getCategory());
             if (!this.itemValidator.validateItemDataForUpdate(this.itemCategoryRepository, updateItemDto) || updatedCategoryId == null) {
-                return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
+                return new ResponseEntity(new MessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
             }
             Optional<Item> optionalCurrentItem = this.itemRepository.findByName(itemToUpdate);
             if (optionalCurrentItem.isPresent()) {
@@ -107,10 +107,10 @@ public class ItemService {
                 this.redisValueCache.clearAllCachedValues();
                 return new ResponseEntity(HttpStatus.OK);
             }
-            return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity(new MessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new MessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -127,7 +127,7 @@ public class ItemService {
         try {
             boolean isUserAuthorized = this.authorizationTokenValidator.validateAuthorizationToken(this.userRepository, email, authorizationToken);
             if (isUserAuthorized == false) {
-                return new ResponseEntity(new ErrorMessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity(new MessageDto("O usuário informado não está autorizado para acessar esse serviço"), HttpStatus.UNAUTHORIZED);
             }
             Optional<Item> optionalCurrentItem = this.itemRepository.findByName(itemToUpdate);
             if (optionalCurrentItem.isPresent()) {
@@ -137,10 +137,10 @@ public class ItemService {
                 this.redisValueCache.clearAllCachedValues();
                 return new ResponseEntity(HttpStatus.OK);
             }
-            return new ResponseEntity(new ErrorMessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity(new MessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity(new ErrorMessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new MessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
