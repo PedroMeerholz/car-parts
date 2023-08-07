@@ -17,6 +17,7 @@ import io.github.pedromeerholz.stock.api.repository.item.views.ItemsViewReposito
 import io.github.pedromeerholz.stock.redis.RedisValueCache;
 import io.github.pedromeerholz.stock.validations.AuthorizationTokenValidator;
 import io.github.pedromeerholz.stock.validations.itemValidations.ItemValidator;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,8 @@ public class ItemService {
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(new MessageDto("Item não cadastrado! Verifique as informações."), HttpStatus.NOT_ACCEPTABLE);
+        } catch (DataIntegrityViolationException exception) {
+          return new ResponseEntity(new MessageDto("Item não cadastrado! Já existe um item com esse nome."), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception exception) {
             exception.printStackTrace();
             return new ResponseEntity(new MessageDto(exception.getCause().getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
