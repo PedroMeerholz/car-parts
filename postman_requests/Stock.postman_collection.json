@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Pedro\",\r\n    \"email\": \"pedro@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+							"raw": "{\r\n    \"name\": \"pedro\",\r\n    \"email\": \"pedro@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -46,7 +46,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "[B@239bd0d9",
+								"value": "[B@747adf78",
 								"type": "text"
 							}
 						],
@@ -130,12 +130,12 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "12345678910",
+								"value": "12345678",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/user/login?email=pedro@stockapi.br",
+							"raw": "http://localhost:8080/api/user/login?email=pedro@gmail.com",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -149,7 +149,40 @@
 							"query": [
 								{
 									"key": "email",
-									"value": "pedro@stockapi.br"
+									"value": "pedro@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "[B@6b5f9f4a",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/user/logout?email=matias@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "matias@gmail.com"
 								}
 							]
 						}
@@ -168,7 +201,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "[B@239bd0d9",
+								"value": "[B@2930d9e4",
 								"type": "text"
 							}
 						],
@@ -182,7 +215,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/itemCategory/create?email=pedro@stockapi.br",
+							"raw": "http://localhost:8080/api/itemCategory/create?email=pedro@gmail.com",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -196,7 +229,7 @@
 							"query": [
 								{
 									"key": "email",
-									"value": "pedro@stockapi.br"
+									"value": "pedro@gmail.com"
 								}
 							]
 						}
@@ -276,7 +309,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/itemCategory/listAllByStatus?status=false",
+							"raw": "http://localhost:8080/api/itemCategory/listAllByStatus?status=true",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -290,7 +323,7 @@
 							"query": [
 								{
 									"key": "status",
-									"value": "false"
+									"value": "true"
 								}
 							]
 						}
@@ -309,7 +342,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "[B@239bd0d9",
+								"value": "[B@2930d9e4",
 								"type": "text"
 							}
 						],
@@ -323,7 +356,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/item/create?email=pedro@stockapi.br",
+							"raw": "http://localhost:8080/api/item/create?email=pedro@gmail.com",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -337,7 +370,7 @@
 							"query": [
 								{
 									"key": "email",
-									"value": "pedro@stockapi.br"
+									"value": "pedro@gmail.com"
 								}
 							]
 						}
@@ -351,7 +384,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "[B@239bd0d9",
+								"value": "[B@747adf78",
 								"type": "text"
 							}
 						],
@@ -365,7 +398,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/item/updateInfo?itemToUpdate=Processador AMD Ryzen 5 4500&email=pedro@stockapi.br",
+							"raw": "http://localhost:8080/api/item/updateInfo?itemToUpdate=Processador AMD Ryzen 5 450&email=pedro@stockapi.br",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -379,7 +412,7 @@
 							"query": [
 								{
 									"key": "itemToUpdate",
-									"value": "Processador AMD Ryzen 5 4500"
+									"value": "Processador AMD Ryzen 5 450"
 								},
 								{
 									"key": "email",
@@ -401,6 +434,16 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
 						"url": {
 							"raw": "http://localhost:8080/api/item/updateQuantity?itemToUpdate=Processador AMD Ryzen 5 3500&quantityToUpdate=15&email=pedro@stockapi.br",
 							"protocol": "http",
@@ -479,7 +522,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/item/listItem?itemName=Processador Intel i5-10400",
+							"raw": "http://localhost:8080/api/item/listItem?itemName=Processador AMD Ryzen 5 4500",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -493,7 +536,7 @@
 							"query": [
 								{
 									"key": "itemName",
-									"value": "Processador Intel i5-10400"
+									"value": "Processador AMD Ryzen 5 4500"
 								}
 							]
 						}
@@ -506,7 +549,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/item/listItemHistory?itemName=Processador Intel i5-10400",
+							"raw": "http://localhost:8080/api/item/listItemHistory?itemName=Processador AMD Ryzen 5 4500",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -520,7 +563,7 @@
 							"query": [
 								{
 									"key": "itemName",
-									"value": "Processador Intel i5-10400"
+									"value": "Processador AMD Ryzen 5 4500"
 								}
 							]
 						}
